@@ -1,0 +1,8 @@
+#Config Locale
+spring.web.locale-resolver=fixed
+spring.web.locale=pt_BR
+
+#PostegreSQL
+spring.datasource.url=jdbc:postgresql://localhost:5432/project-api-2
+spring.datasource.username=postgres
+spring.datasource.password=1234
