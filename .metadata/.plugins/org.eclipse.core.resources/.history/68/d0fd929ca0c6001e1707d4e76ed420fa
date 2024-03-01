@@ -1,9 +1,0 @@
-#Config Locale
-spring.web.locale-resolver=fixed
-spring.web.locale=pt_BR
-
-#PostegreSQL
-spring.datasource.driver-class-name=org.postgresql.Driver
-spring.datasource.url=jdbc:postgresql://localhost:5432/project-api-2Timezone=America/Sao_Paulo
-spring.datasource.username=postgres
-spring.datasource.password=1234

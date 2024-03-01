@@ -1,3 +1,0 @@
-#Config Locale
-spring.web.locale-resolver=fixed
-spring.web.locale=pt_BR

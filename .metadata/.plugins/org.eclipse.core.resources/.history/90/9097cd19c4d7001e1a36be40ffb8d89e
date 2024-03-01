@@ -1,0 +1,5 @@
+package com.gabriel.course.projectapi2.DTOs;
+
+public class UserDTO {
+
+}

@@ -1,0 +1,29 @@
+package com.gabriel.course.projectapi2.services;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.gabriel.course.projectapi2.model.User;
+import com.gabriel.course.projectapi2.repositories.UserRepository;
+
+@Service
+public class UserService {
+	
+	@Autowired
+	private UserRepository userRepository;
+
+	public List<User> findUsers() {
+		return userRepository.findAll();
+	}
+	
+	public User findById(Long id) {
+		return userRepository.findById(id).orElseThrow(
+				() -> new RuntimeException("Not found user by id: " + id) );
+	}
+	
+	public User createUser(User user) {
+		return userRepository.save(user);
+	}
+}
