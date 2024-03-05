@@ -3,6 +3,8 @@ package com.gabriel.course.projectapi2.model;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import org.antlr.v4.runtime.misc.ParseCancellationException;
+
 import com.gabriel.course.projectapi2.model.enums.Role;
 
 import jakarta.persistence.Column;
@@ -33,13 +35,13 @@ public class User implements Serializable {
 	private Long id;
 	
 	@Column(name = "username", nullable = false, unique = true, length = 100)
-	private String email;
+	private String username;
 	@Column(name = "password", nullable = false, length = 200)
 	private String password;
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "role", nullable = false, length = 25)
-	private Role role;
+	private Role role = Role.CLIENT;
 	
 	@Column(name="date_create")
 	private LocalDateTime dateCreate;
@@ -53,16 +55,20 @@ public class User implements Serializable {
 	@Column(name="name_update")
 	private String nameUpdate;
 	
+
+	
 	public User(Long id, String email, String password, Role role, LocalDateTime dateCreate, LocalDateTime dateUpdate,
 			String nameCreate, String nameUpdate) {
 		this.id = id;
-		this.email = email;
+		this.username = email;
 		this.password = password;
 		this.role = role;
 		this.dateCreate = dateCreate;
 		this.dateUpdate = dateUpdate;
 		this.nameCreate = nameCreate;
 		this.nameUpdate = nameUpdate;
+		
+		
 	}
 
 	@Override

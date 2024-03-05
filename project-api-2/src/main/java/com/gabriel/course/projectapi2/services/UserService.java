@@ -32,13 +32,24 @@ public class UserService {
 	}
 	
 	@Transactional
-	public User updatePassword(Long id, User newUser) {
+	public User updatePassword(Long id, String currentPass, String newPass, String confirmPass) {
+			
 		var oldUser = userRepository.getReferenceById(id);
-		return userRepository.save(modPasswordUser(oldUser, newUser));
+		
+		if(!currentPass.equals(oldUser.getPassword())) {
+			throw new RuntimeException("Digite a senha atual correta!");
+		}
+		
+		if(!newPass.equals(confirmPass)) {
+			throw new RuntimeException("Senhas incompativeis!");			
+		}
+		
+		return userRepository.save(modPasswordUser(oldUser, newPass));
 	}
 	
-	private User modPasswordUser(User u1, User u2) {
-		u1.setPassword(u2.getPassword());
+	private User modPasswordUser(User u1, String newPass) {
+		u1.setPassword(newPass);
+		
 		return u1;
 	}
 }

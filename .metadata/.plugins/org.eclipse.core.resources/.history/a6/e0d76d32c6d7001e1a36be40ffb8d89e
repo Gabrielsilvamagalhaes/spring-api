@@ -1,0 +1,14 @@
+package com.gabriel.course.projectapi2.dto.mapper;
+
+import org.modelmapper.ModelMapper;
+
+import com.gabriel.course.projectapi2.dto.UserCreateDto;
+import com.gabriel.course.projectapi2.model.User;
+
+public class UserMapper {
+	
+	public static User toUser(UserCreateDto userCreateDto) {
+		return new ModelMapper().map(userCreateDto, User.class);	
+				
+	}
+}

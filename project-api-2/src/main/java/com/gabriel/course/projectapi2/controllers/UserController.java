@@ -1,5 +1,6 @@
 package com.gabriel.course.projectapi2.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gabriel.course.projectapi2.dto.UserCreateDto;
+import com.gabriel.course.projectapi2.dto.UserPassDto;
+import com.gabriel.course.projectapi2.dto.UserResponseDto;
 import com.gabriel.course.projectapi2.dto.mapper.UserMapper;
 import com.gabriel.course.projectapi2.model.User;
 import com.gabriel.course.projectapi2.services.UserService;
@@ -27,22 +30,26 @@ public class UserController {
 	
 
 	@GetMapping
-	public ResponseEntity<List<User>> getAllUsers() {
-		return ResponseEntity.ok(userService.findUsers());
+	public ResponseEntity<List<UserResponseDto>> getAllUsers() {
+		List<User> users = userService.findUsers();
+		return ResponseEntity.ok(UserMapper.toListDto(users));
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<User> getById(@PathVariable Long id) {
-		return ResponseEntity.ok(userService.findById(id));
+	public ResponseEntity<UserResponseDto> getById(@PathVariable Long id) {
+		User user = userService.findById(id);
+		return ResponseEntity.ok(UserMapper.toDto(user));
 	}
 	
 	@PostMapping
-	public ResponseEntity<User> createUser(@RequestBody UserCreateDto userCreateDto){
-		return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(UserMapper.toUser(userCreateDto)));
+	public ResponseEntity<UserResponseDto> createUser(@RequestBody UserCreateDto userCreateDto){
+		User user = userService.createUser(UserMapper.toUser(userCreateDto));
+		return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.toDto(user));
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
-		return ResponseEntity.ok(userService.updatePassword(id, user));
+	public ResponseEntity<Void> updateUser(@PathVariable Long id, @RequestBody UserPassDto userPassDto) {
+		 userService.updatePassword(id, userPassDto.getCurrentPass(), userPassDto.getNewPass(), userPassDto.getConfirmPass());
+		return ResponseEntity.noContent().build();
 	}
 }

@@ -7,12 +7,12 @@ import lombok.Setter;
 import lombok.ToString;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-@AllArgsConstructor
 @ToString
 public class UserCreateDto {
 
-	private Long id;
-	
+	private String username;
+	private String password;
 }
