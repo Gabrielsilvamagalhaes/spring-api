@@ -3,8 +3,6 @@ package com.gabriel.course.projectapi2.model;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import org.antlr.v4.runtime.misc.ParseCancellationException;
-
 import com.gabriel.course.projectapi2.model.enums.Role;
 
 import jakarta.persistence.Column;
@@ -67,7 +65,6 @@ public class User implements Serializable {
 		this.dateUpdate = dateUpdate;
 		this.nameCreate = nameCreate;
 		this.nameUpdate = nameUpdate;
-		
 		
 	}
 

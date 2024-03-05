@@ -1,6 +1,5 @@
 package com.gabriel.course.projectapi2.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +19,8 @@ import com.gabriel.course.projectapi2.dto.UserResponseDto;
 import com.gabriel.course.projectapi2.dto.mapper.UserMapper;
 import com.gabriel.course.projectapi2.model.User;
 import com.gabriel.course.projectapi2.services.UserService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/api/users")
@@ -42,13 +43,13 @@ public class UserController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<UserResponseDto> createUser(@RequestBody UserCreateDto userCreateDto){
+	public ResponseEntity<UserResponseDto> createUser(@Valid @RequestBody UserCreateDto userCreateDto){
 		User user = userService.createUser(UserMapper.toUser(userCreateDto));
 		return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.toDto(user));
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Void> updateUser(@PathVariable Long id, @RequestBody UserPassDto userPassDto) {
+	public ResponseEntity<Void> updateUser(@PathVariable Long id, @Valid @RequestBody UserPassDto userPassDto) {
 		 userService.updatePassword(id, userPassDto.getCurrentPass(), userPassDto.getNewPass(), userPassDto.getConfirmPass());
 		return ResponseEntity.noContent().build();
 	}
