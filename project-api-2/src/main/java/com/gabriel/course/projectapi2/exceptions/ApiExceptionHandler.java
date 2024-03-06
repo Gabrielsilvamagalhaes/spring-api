@@ -15,10 +15,22 @@ import lombok.extern.slf4j.Slf4j;
 @RestControllerAdvice
 public class ApiExceptionHandler {
 
+	@ExceptionHandler(UsernameUniqueViolationException.class)
+	public ResponseEntity<ErrorMessage> methodArgumentNotValidException(RuntimeException exception, 
+																		HttpServletRequest request) {
+		
+		log.error("Api error!", exception);
+		
+		return ResponseEntity.
+				status(HttpStatus.CONFLICT).
+				contentType(MediaType.APPLICATION_JSON).
+				body(new ErrorMessage(request, HttpStatus.CONFLICT, exception.getMessage()));
+	}
+	
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ErrorMessage> methodArgumentNotValidException(MethodArgumentNotValidException exception, 
-																		HttpServletRequest request, 
-																		BindingResult result) {
+			HttpServletRequest request, 
+			BindingResult result) {
 		
 		log.error("Api error!", exception);
 		

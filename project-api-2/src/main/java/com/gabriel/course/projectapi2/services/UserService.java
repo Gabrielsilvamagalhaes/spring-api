@@ -3,9 +3,11 @@ package com.gabriel.course.projectapi2.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.gabriel.course.projectapi2.exceptions.UsernameUniqueViolationException;
 import com.gabriel.course.projectapi2.model.User;
 import com.gabriel.course.projectapi2.repositories.UserRepository;
 
@@ -28,7 +30,12 @@ public class UserService {
 	
 	@Transactional
 	public User createUser(User user) {
+		try {
+			
 		return userRepository.save(user);
+		}catch(DataIntegrityViolationException exception) {
+			throw new UsernameUniqueViolationException(String.format("Username '%s' já cadastrado!", user.getUsername()));
+		}
 	}
 	
 	@Transactional

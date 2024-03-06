@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,6 +26,8 @@ public class ErrorMessage {
 	private String statusText;
 	private String message;
 	
+//	Na hora de serializar a estrutura de dados 'errors' o jsonIclude faz com que ela não apareça se o valor for nulo
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private Map<String, String> errors;
 	
 	public ErrorMessage() {
