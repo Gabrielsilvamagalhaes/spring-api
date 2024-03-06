@@ -7,6 +7,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.gabriel.course.projectapi2.exceptions.EntityNotFoundException;
 import com.gabriel.course.projectapi2.exceptions.UsernameUniqueViolationException;
 import com.gabriel.course.projectapi2.model.User;
 import com.gabriel.course.projectapi2.repositories.UserRepository;
@@ -25,7 +26,7 @@ public class UserService {
 	@Transactional(readOnly = true)
 	public User findById(Long id) {
 		return userRepository.findById(id).orElseThrow(
-				() -> new RuntimeException("Not found user by id: " + id) );
+				() -> new EntityNotFoundException(String.format("Usuário não encontrado | ID: %s", id)));
 	}
 	
 	@Transactional
