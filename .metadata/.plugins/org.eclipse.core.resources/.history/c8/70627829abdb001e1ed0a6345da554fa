@@ -1,0 +1,5 @@
+package com.gabriel.course.projectapi2.exceptions;
+
+public class ErrorMessage {
+
+}

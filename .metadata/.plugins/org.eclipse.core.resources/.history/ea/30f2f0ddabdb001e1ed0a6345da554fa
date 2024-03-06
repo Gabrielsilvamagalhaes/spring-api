@@ -1,0 +1,10 @@
+package com.gabriel.course.projectapi2.exceptions;
+
+//Classe que retorna um objeto de erro, quando dê uma exceção numa requisição HTTP
+public class ErrorMessage {
+	
+	private String path;
+	private String method;
+	private int status;
+	private String statusText;
+}
