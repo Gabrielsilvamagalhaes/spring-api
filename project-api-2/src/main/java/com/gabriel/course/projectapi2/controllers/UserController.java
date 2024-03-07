@@ -43,6 +43,13 @@ public class UserController {
 		return ResponseEntity.ok(UserMapper.toListDto(users));
 	}
 	
+	@Operation(summary = "Localização de um usário", description = "Recurso usado para localizar um usuários por id",
+			responses = {
+					@ApiResponse(responseCode = "200", description = "Usuário buscado com sucesso!",
+							content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDto.class))),
+					@ApiResponse(responseCode = "404", description = "Usuário não encontrado!",
+							content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
+			})
 	@GetMapping("/{id}")
 	public ResponseEntity<UserResponseDto> getById(@PathVariable Long id) {
 		User user = userService.findById(id);
