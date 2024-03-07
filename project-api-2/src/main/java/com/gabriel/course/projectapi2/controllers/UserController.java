@@ -45,7 +45,7 @@ public class UserController {
 	
 	@Operation(summary = "Localização de um usário", description = "Recurso usado para localizar um usuários por id",
 			responses = {
-					@ApiResponse(responseCode = "200", description = "Usuário buscado com sucesso!",
+					@ApiResponse(responseCode = "200", description = "Usuário resgatado com sucesso!",
 							content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDto.class))),
 					@ApiResponse(responseCode = "404", description = "Usuário não encontrado!",
 							content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
@@ -71,6 +71,13 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.toDto(user));
 	}
 	
+	@Operation(summary = "Edição de senha de um usuário", description = "Recurso usado para editar a senha de um usuário",
+			responses = {
+					@ApiResponse(responseCode = "204", description = "Senha alterada com sucesso!",
+							content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class))),
+					@ApiResponse(responseCode = "400", description = "Senha inserida incompátivel!",
+							content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
+			})
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> updateUser(@PathVariable Long id, @Valid @RequestBody UserPassDto userPassDto) {
 		 userService.updatePassword(id, userPassDto.getCurrentPass(), userPassDto.getNewPass(), userPassDto.getConfirmPass());
