@@ -28,6 +28,19 @@ public class ApiExceptionHandler {
 	}
 	
 	
+	@ExceptionHandler(PasswordInvalidException.class)
+	public ResponseEntity<ErrorMessage> passwordInvalidException(RuntimeException exception, 
+			HttpServletRequest request) {
+		
+		log.error("Api error!", exception);
+		
+		return ResponseEntity.
+				status(HttpStatus.BAD_REQUEST).
+				contentType(MediaType.APPLICATION_JSON).
+				body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, exception.getMessage()));
+	}
+	
+	
 	@ExceptionHandler(EntityNotFoundException.class)
 	public ResponseEntity<ErrorMessage> entityNotFoundException(RuntimeException exception, 
 			HttpServletRequest request) {

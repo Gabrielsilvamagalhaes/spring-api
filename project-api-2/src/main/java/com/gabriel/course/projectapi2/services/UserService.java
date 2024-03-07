@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gabriel.course.projectapi2.exceptions.EntityNotFoundException;
+import com.gabriel.course.projectapi2.exceptions.PasswordInvalidException;
 import com.gabriel.course.projectapi2.exceptions.UsernameUniqueViolationException;
 import com.gabriel.course.projectapi2.model.User;
 import com.gabriel.course.projectapi2.repositories.UserRepository;
@@ -45,11 +46,11 @@ public class UserService {
 		var oldUser = userRepository.getReferenceById(id);
 		
 		if(!currentPass.equals(oldUser.getPassword())) {
-			throw new RuntimeException("Digite a senha atual correta!");
+			throw new PasswordInvalidException("Digite a senha atual correta!");
 		}
 		
 		if(!newPass.equals(confirmPass)) {
-			throw new RuntimeException("Senhas incompativeis!");			
+			throw new PasswordInvalidException("Senhas incompativeis!");			
 		}
 		
 		return userRepository.save(modPasswordUser(oldUser, newPass));
