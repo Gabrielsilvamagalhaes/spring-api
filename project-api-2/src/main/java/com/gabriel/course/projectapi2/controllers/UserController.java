@@ -37,13 +37,18 @@ public class UserController {
 	UserService userService;
 	
 
+	@Operation(summary = "Localização de todos os usuários", description = "Recurso usado para localizar todos os usuários",
+			responses = {
+					@ApiResponse(responseCode = "200", description = "Usuários resgatados com sucesso!",
+							content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDto.class)))
+			})
 	@GetMapping
 	public ResponseEntity<List<UserResponseDto>> getAllUsers() {
 		List<User> users = userService.findUsers();
 		return ResponseEntity.ok(UserMapper.toListDto(users));
 	}
 	
-	@Operation(summary = "Localização de um usário", description = "Recurso usado para localizar um usuários por id",
+	@Operation(summary = "Localização de um usuário", description = "Recurso usado para localizar um usuários por id",
 			responses = {
 					@ApiResponse(responseCode = "200", description = "Usuário resgatado com sucesso!",
 							content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDto.class))),
