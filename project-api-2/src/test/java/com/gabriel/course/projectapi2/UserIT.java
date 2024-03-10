@@ -135,4 +135,35 @@ public class UserIT {
 
 
 	}
+
+	@Test
+	public void userGet_WithGetById_ReturnUserStatus200() {
+		UserResponseDto responseBody = testClient.get()
+				.uri("/api/users/100")
+				.exchange()
+				.expectStatus().isOk()
+				.expectBody(UserResponseDto.class)
+				.returnResult().getResponseBody();
+
+		Assertions.assertThat(responseBody).isNotNull();
+		Assertions.assertThat(responseBody.getId()).isEqualTo(100);
+		Assertions.assertThat(responseBody.getUsername()).isEqualTo("arroz@gmail.com");
+		Assertions.assertThat(responseBody.getRole()).isEqualTo("ADMIN");
+
+	}
+
+	@Test
+	public void userGet_WithInvalidGetById_ReturnStatus404() {
+		ErrorMessage responseBody = testClient.get()
+				.uri("/api/users/2")
+				.exchange()
+				.expectStatus().isEqualTo(404)
+				.expectBody(ErrorMessage.class)
+				.returnResult().getResponseBody();
+
+		Assertions.assertThat(responseBody).isNotNull();
+		Assertions.assertThat(responseBody.getStatus()).isEqualTo(404);
+
+
+	}
 }
