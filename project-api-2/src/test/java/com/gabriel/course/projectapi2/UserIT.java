@@ -28,7 +28,7 @@ public class UserIT {
 		UserResponseDto responseBody = testClient.post()
 				.uri("/api/users")
 				.contentType(MediaType.APPLICATION_JSON)
-				.bodyValue(new UserCreateDto("gabiles278@gmail.com", "123456"))
+				.bodyValue(new UserCreateDto("gabiles278@email.com", "123456"))
 				.exchange()
 				.expectStatus().isCreated()
 				.expectBody(UserResponseDto.class)
@@ -36,7 +36,7 @@ public class UserIT {
 		
 		Assertions.assertThat(responseBody).isNotNull();
 		Assertions.assertThat(responseBody.getId()).isNotNull();
-		Assertions.assertThat(responseBody.getUsername()).isEqualTo("gabiles278@gmail.com");
+		Assertions.assertThat(responseBody.getUsername()).isEqualTo("gabiles278@email.com");
 		Assertions.assertThat(responseBody.getRole()).isEqualTo("CLIENT");
 		
 	}
@@ -84,7 +84,7 @@ public class UserIT {
 		ErrorMessage responseBody = testClient.post()
 				.uri("/api/users")
 				.contentType(MediaType.APPLICATION_JSON)
-				.bodyValue(new UserCreateDto("gabiles278@gmail.com", ""))
+				.bodyValue(new UserCreateDto("gabiles278@email.com", ""))
 				.exchange()
 				.expectStatus().isEqualTo(422)
 				.expectBody(ErrorMessage.class)
@@ -96,7 +96,7 @@ public class UserIT {
 		responseBody = testClient.post()
 				.uri("/api/users")
 				.contentType(MediaType.APPLICATION_JSON)
-				.bodyValue(new UserCreateDto("gabiles278@gmail.com", "1234566"))
+				.bodyValue(new UserCreateDto("gabiles278@email.com", "1234566"))
 				.exchange()
 				.expectStatus().isEqualTo(422)
 				.expectBody(ErrorMessage.class)
@@ -108,7 +108,7 @@ public class UserIT {
 		responseBody = testClient.post()
 				.uri("/api/users")
 				.contentType(MediaType.APPLICATION_JSON)
-				.bodyValue(new UserCreateDto("gabiles278@gmail.com", "1"))
+				.bodyValue(new UserCreateDto("gabiles278@email.com", "1"))
 				.exchange()
 				.expectStatus().isEqualTo(422)
 				.expectBody(ErrorMessage.class)
@@ -116,6 +116,23 @@ public class UserIT {
 
 		Assertions.assertThat(responseBody).isNotNull();
 		Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+
+	}
+
+	@Test
+	public void userCreate_WithUsernameExists_ReturnStatus409() {
+		ErrorMessage responseBody = testClient.post()
+				.uri("/api/users")
+				.contentType(MediaType.APPLICATION_JSON)
+				.bodyValue(new UserCreateDto("arroz@gmail.com", "123456"))
+				.exchange()
+				.expectStatus().isEqualTo(409)
+				.expectBody(ErrorMessage.class)
+				.returnResult().getResponseBody();
+
+		Assertions.assertThat(responseBody).isNotNull();
+		Assertions.assertThat(responseBody.getStatus()).isEqualTo(409);
+
 
 	}
 }
