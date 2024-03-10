@@ -17,7 +17,6 @@ import lombok.ToString;
 public class UserCreateDto {
 
 	@NotBlank
-//	Regex utilizado para validar o e-mail
 	@Email(message = "Formato de e-mail inválido!")
 	private String username;
 	
