@@ -15,6 +15,8 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import com.gabriel.course.projectapi2.dto.UserCreateDto;
 import com.gabriel.course.projectapi2.dto.UserResponseDto;
 
+import java.util.List;
+
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @Sql(scripts = "/sql/users/users-insert.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = "/sql/users/users-delete.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
@@ -180,44 +182,60 @@ public class UserIT {
 
 	@Test
 	public void userPut_WithInvalidPass_ReturnStatus400() {
-		testClient.put()
-				.uri("/api/users/100")
-				.contentType(MediaType.APPLICATION_JSON)
-				.bodyValue(new UserPassDto("123457", "654321", "654321"))
-				.exchange()
-				.expectStatus().isEqualTo(400);
-
-		testClient.put()
+		ErrorMessage responseBody = testClient.put()
 				.uri("/api/users/100")
 				.contentType(MediaType.APPLICATION_JSON)
 				.bodyValue(new UserPassDto("123456", "654322", "654321"))
 				.exchange()
-				.expectStatus().isEqualTo(400);
+				.expectStatus().isEqualTo(400)
+				.expectBody(ErrorMessage.class)
+				.returnResult().getResponseBody();
+
+		Assertions.assertThat(responseBody).isNotNull();
+		Assertions.assertThat(responseBody.getStatus()).isEqualTo(400);
+
+		responseBody = testClient.put()
+				.uri("/api/users/100")
+				.contentType(MediaType.APPLICATION_JSON)
+				.bodyValue(new UserPassDto("123455", "654321", "654321"))
+				.exchange()
+				.expectStatus().isEqualTo(400)
+				.expectBody(ErrorMessage.class)
+				.returnResult().getResponseBody();
+
+		Assertions.assertThat(responseBody).isNotNull();
+		Assertions.assertThat(responseBody.getStatus()).isEqualTo(400);
+
 
 	}
 
 	@Test
 	public void userPut_WithInvalidId_ReturnStatus404() {
-		testClient.put()
-				.uri("/api/users/1")
+		ErrorMessage responseBody = testClient.put()
+				.uri("/api/users/2")
 				.contentType(MediaType.APPLICATION_JSON)
 				.bodyValue(new UserPassDto("123456", "654321", "654321"))
 				.exchange()
-				.expectStatus().isEqualTo(404);
+				.expectStatus().isEqualTo(404)
+				.expectBody(ErrorMessage.class)
+				.returnResult().getResponseBody();
 
-		testClient.put()
-				.uri("/api/users/1")
-				.contentType(MediaType.APPLICATION_JSON)
-				.bodyValue(new UserPassDto("123456", "654322", "654321"))
-				.exchange()
-				.expectStatus().isEqualTo(404);
+		Assertions.assertThat(responseBody).isNotNull();
+		Assertions.assertThat(responseBody.getStatus()).isEqualTo(404);
 
-		testClient.put()
-				.uri("/api/users/1")
-				.contentType(MediaType.APPLICATION_JSON)
-				.bodyValue(new UserPassDto("123457", "654322", "654321"))
+	}
+
+	@Test
+	public void usersGet_WithGetAll_ReturnUserStatus200() {
+		List<UserResponseDto> responseBody = testClient.get()
+				.uri("/api/users")
 				.exchange()
-				.expectStatus().isEqualTo(404);
+				.expectStatus().isOk()
+				.expectBodyList(UserResponseDto.class)
+				.returnResult().getResponseBody();
+
+		Assertions.assertThat(responseBody).isNotNull();
+		Assertions.assertThat(responseBody.size()).isEqualTo(3);
 
 	}
 }
