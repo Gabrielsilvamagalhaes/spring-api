@@ -17,7 +17,7 @@ import lombok.ToString;
 public class UserCreateDto {
 
 	@NotBlank
-	@Email(message = "Formato de e-mail inválido!")
+	@Email(message = "Formato de e-mail inválido!", regexp = "^[a-z0-9.+-]+@[a-z0-9.-]+\\\\.[a-z]{2,}$")
 	private String username;
 	
 	@NotBlank

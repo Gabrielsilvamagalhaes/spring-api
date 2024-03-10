@@ -1,5 +1,6 @@
 package com.gabriel.course.projectapi2;
 
+import com.gabriel.course.projectapi2.exceptions.ErrorMessage;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,20 +41,81 @@ public class UserIT {
 		
 	}
 	@Test
-	public void userCreate_WithUsernameAndPassValidation_ReturnUserCreatedStatus422() {
-		UserResponseDto responseBody = testClient.post()
+	public void userCreate_WithInvalidUsername_ReturnStatus422() {
+		ErrorMessage responseBody = testClient.post()
 				.uri("/api/users")
 				.contentType(MediaType.APPLICATION_JSON)
-				.bodyValue(new UserCreateDto("gabiles278@gmail.com", "123456"))
+				.bodyValue(new UserCreateDto("", "123456"))
 				.exchange()
-				.expectStatus().isCreated()
-				.expectBody(UserResponseDto.class)
+				.expectStatus().isEqualTo(422)
+				.expectBody(ErrorMessage.class)
 				.returnResult().getResponseBody();
 
 		Assertions.assertThat(responseBody).isNotNull();
-		Assertions.assertThat(responseBody.getId()).isNotNull();
-		Assertions.assertThat(responseBody.getUsername()).isEqualTo("gabiles278@gmail.com");
-		Assertions.assertThat(responseBody.getRole()).isEqualTo("CLIENT");
+		Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+
+		responseBody = testClient.post()
+				.uri("/api/users")
+				.contentType(MediaType.APPLICATION_JSON)
+				.bodyValue(new UserCreateDto("tod@", "123456"))
+				.exchange()
+				.expectStatus().isEqualTo(422)
+				.expectBody(ErrorMessage.class)
+				.returnResult().getResponseBody();
+
+		Assertions.assertThat(responseBody).isNotNull();
+		Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+
+		responseBody = testClient.post()
+				.uri("/api/users")
+				.contentType(MediaType.APPLICATION_JSON)
+				.bodyValue(new UserCreateDto("tod@email", "123456"))
+				.exchange()
+				.expectStatus().isEqualTo(422)
+				.expectBody(ErrorMessage.class)
+				.returnResult().getResponseBody();
+
+		Assertions.assertThat(responseBody).isNotNull();
+		Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+
+	}
+	@Test
+	public void userCreate_WithInvalidPass_ReturnStatus422() {
+		ErrorMessage responseBody = testClient.post()
+				.uri("/api/users")
+				.contentType(MediaType.APPLICATION_JSON)
+				.bodyValue(new UserCreateDto("gabiles278@gmail.com", ""))
+				.exchange()
+				.expectStatus().isEqualTo(422)
+				.expectBody(ErrorMessage.class)
+				.returnResult().getResponseBody();
+
+		Assertions.assertThat(responseBody).isNotNull();
+		Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+
+		responseBody = testClient.post()
+				.uri("/api/users")
+				.contentType(MediaType.APPLICATION_JSON)
+				.bodyValue(new UserCreateDto("gabiles278@gmail.com", "1234566"))
+				.exchange()
+				.expectStatus().isEqualTo(422)
+				.expectBody(ErrorMessage.class)
+				.returnResult().getResponseBody();
+
+		Assertions.assertThat(responseBody).isNotNull();
+		Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+
+		responseBody = testClient.post()
+				.uri("/api/users")
+				.contentType(MediaType.APPLICATION_JSON)
+				.bodyValue(new UserCreateDto("gabiles278@gmail.com", "1"))
+				.exchange()
+				.expectStatus().isEqualTo(422)
+				.expectBody(ErrorMessage.class)
+				.returnResult().getResponseBody();
+
+		Assertions.assertThat(responseBody).isNotNull();
+		Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
 
 	}
 }
