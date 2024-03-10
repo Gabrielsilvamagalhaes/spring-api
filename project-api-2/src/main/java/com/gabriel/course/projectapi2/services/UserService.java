@@ -43,8 +43,8 @@ public class UserService {
 	@Transactional
 	public User updatePassword(Long id, String currentPass, String newPass, String confirmPass) {
 			
-		var oldUser = userRepository.getReferenceById(id);
-		
+		var oldUser = findById(id);
+
 		if(!currentPass.equals(oldUser.getPassword())) {
 			throw new PasswordInvalidException("Digite a senha atual correta!");
 		}

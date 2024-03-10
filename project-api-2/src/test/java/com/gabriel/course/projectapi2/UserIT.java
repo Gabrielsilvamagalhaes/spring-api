@@ -1,5 +1,6 @@
 package com.gabriel.course.projectapi2;
 
+import com.gabriel.course.projectapi2.dto.UserPassDto;
 import com.gabriel.course.projectapi2.exceptions.ErrorMessage;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -164,6 +165,59 @@ public class UserIT {
 		Assertions.assertThat(responseBody).isNotNull();
 		Assertions.assertThat(responseBody.getStatus()).isEqualTo(404);
 
+
+	}
+
+	@Test
+	public void userPut_WithPassValidation_ReturnUserUpdatedStatus204() {
+		testClient.put()
+				.uri("/api/users/100")
+				.contentType(MediaType.APPLICATION_JSON)
+				.bodyValue(new UserPassDto("123456", "654321", "654321"))
+				.exchange()
+				.expectStatus().isNoContent();
+	}
+
+	@Test
+	public void userPut_WithInvalidPass_ReturnStatus400() {
+		testClient.put()
+				.uri("/api/users/100")
+				.contentType(MediaType.APPLICATION_JSON)
+				.bodyValue(new UserPassDto("123457", "654321", "654321"))
+				.exchange()
+				.expectStatus().isEqualTo(400);
+
+		testClient.put()
+				.uri("/api/users/100")
+				.contentType(MediaType.APPLICATION_JSON)
+				.bodyValue(new UserPassDto("123456", "654322", "654321"))
+				.exchange()
+				.expectStatus().isEqualTo(400);
+
+	}
+
+	@Test
+	public void userPut_WithInvalidId_ReturnStatus404() {
+		testClient.put()
+				.uri("/api/users/1")
+				.contentType(MediaType.APPLICATION_JSON)
+				.bodyValue(new UserPassDto("123456", "654321", "654321"))
+				.exchange()
+				.expectStatus().isEqualTo(404);
+
+		testClient.put()
+				.uri("/api/users/1")
+				.contentType(MediaType.APPLICATION_JSON)
+				.bodyValue(new UserPassDto("123456", "654322", "654321"))
+				.exchange()
+				.expectStatus().isEqualTo(404);
+
+		testClient.put()
+				.uri("/api/users/1")
+				.contentType(MediaType.APPLICATION_JSON)
+				.bodyValue(new UserPassDto("123457", "654322", "654321"))
+				.exchange()
+				.expectStatus().isEqualTo(404);
 
 	}
 }

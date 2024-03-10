@@ -81,6 +81,8 @@ public class UserController {
 					@ApiResponse(responseCode = "204", description = "Senha alterada com sucesso!",
 							content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class))),
 					@ApiResponse(responseCode = "400", description = "Senha inserida incompátivel!",
+							content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+					@ApiResponse(responseCode = "404", description = "Usuário não encontrado!",
 							content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
 			})
 	@PutMapping("/{id}")
