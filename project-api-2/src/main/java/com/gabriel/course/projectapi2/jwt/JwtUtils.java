@@ -58,7 +58,7 @@ public class JwtUtils {
             return  Jwts.parser()
                     .verifyWith(generatedKey())
                     .build()
-                    .parseSignedClaims(refactorToken(token)).getPayload()
+                    .parseSignedClaims(refactorToken(token)).getPayload();
         }catch (JwtException exception) {
             log.error(String.format("Token invalido %s", exception.getMessage()));
         }
