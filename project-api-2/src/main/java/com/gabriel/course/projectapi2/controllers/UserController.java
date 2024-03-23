@@ -60,6 +60,12 @@ public class UserController {
 		User user = userService.findById(id);
 		return ResponseEntity.ok(UserMapper.toDto(user));
 	}
+
+	@GetMapping("/username/{username}")
+	public ResponseEntity<UserResponseDto> getByUsername(@PathVariable String username) {
+		var user = userService.findByUsername(username);
+		return  ResponseEntity.ok(UserMapper.toDto(user));
+	}
 	
 	@Operation(summary = "Criação de um novo usuário", description = "Recurso usado para criar um usuário",
 			responses = {
