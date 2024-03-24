@@ -5,18 +5,16 @@ import java.time.LocalDateTime;
 
 import com.gabriel.course.projectapi2.model.enums.Role;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "app_users")
@@ -24,6 +22,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
+@EntityListeners(AuditingEntityListener.class)
 public class User implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -40,16 +39,20 @@ public class User implements Serializable {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "role", nullable = false, length = 25)
 	private Role role = Role.CLIENT;
-	
+
+	@CreatedDate
 	@Column(name="date_create")
 	private LocalDateTime dateCreate;
+	@LastModifiedDate
 	@Column(name="date_update")
 	private LocalDateTime dateUpdate;
 	
 //	Campo usado para registrar o usuário que fez o insert na tabela
+	@CreatedBy
 	@Column(name="name_create")
 	private String nameCreate;
 //	Campo usado para registrar o usuário que fez o update na tabela
+	@LastModifiedBy
 	@Column(name="name_update")
 	private String nameUpdate;
 	
