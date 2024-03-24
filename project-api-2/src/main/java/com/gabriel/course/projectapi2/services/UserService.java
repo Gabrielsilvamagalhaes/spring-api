@@ -5,6 +5,7 @@ import java.util.List;
 import com.gabriel.course.projectapi2.model.enums.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,9 @@ public class UserService {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	@Transactional(readOnly = true)
 	public List<User> findUsers() {
@@ -52,7 +56,7 @@ public class UserService {
 	@Transactional
 	public User createUser(User user) {
 		try {
-
+			user.setPassword(passwordEncoder.encode(user.getPassword()));
 		return userRepository.save(user);
 		}catch(DataIntegrityViolationException exception) {
 			throw new UsernameUniqueViolationException(String.format("Username '%s' já cadastrado!", user.getUsername()));
@@ -64,7 +68,7 @@ public class UserService {
 
 		var oldUser = findById(id);
 
-		if(!currentPass.equals(oldUser.getPassword())) {
+		if(!passwordEncoder.matches(currentPass, oldUser.getPassword())) {
 			throw new PasswordInvalidException("Digite a senha atual correta!");
 		}
 
@@ -76,7 +80,7 @@ public class UserService {
 	}
 
 	private User modPasswordUser(User u1, String newPass) {
-		u1.setPassword(newPass);
+		u1.setPassword(passwordEncoder.encode(newPass));
 
 		return u1;
 	}
