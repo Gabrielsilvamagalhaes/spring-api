@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,11 +57,19 @@ public class UserController {
 							content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
 			})
 	@GetMapping("/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<UserResponseDto> getById(@PathVariable Long id) {
 		User user = userService.findById(id);
 		return ResponseEntity.ok(UserMapper.toDto(user));
 	}
 
+	@Operation(summary = "Localização de um usuário", description = "Recurso usado para localizar um usuários por nome",
+			responses = {
+					@ApiResponse(responseCode = "200", description = "Usuário resgatado com sucesso!",
+							content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDto.class))),
+					@ApiResponse(responseCode = "404", description = "Usuário não encontrado!",
+							content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
+			})
 	@GetMapping("/username/{username}")
 	public ResponseEntity<UserResponseDto> getByUsername(@PathVariable String username) {
 		var user = userService.findByUsername(username);
