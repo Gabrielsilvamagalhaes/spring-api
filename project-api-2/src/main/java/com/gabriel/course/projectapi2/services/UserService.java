@@ -2,7 +2,6 @@ package com.gabriel.course.projectapi2.services;
 
 import java.util.List;
 
-import com.gabriel.course.projectapi2.model.enums.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -44,7 +43,7 @@ public class UserService {
 	}
 
 	@Transactional(readOnly = true)
-	public Role findRoleByUsername(String username) {
+	public User.Role findRoleByUsername(String username) {
 			var user = userRepository.findByUsername(username).orElseThrow(
 				() -> new EntityNotFoundException(String.format("Usuário não encontrado | EMAIL: %s", username)));
 

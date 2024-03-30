@@ -1,3 +1,3 @@
-INSERT INTO app_users(id, username, password, role) values (100, 'arroz@gmail.com', '123456', 'ADMIN');
-INSERT INTO app_users(id, username, password, role) values (101, 'feijao@gmail.com', '123456', 'CLIENT');
-INSERT INTO app_users(id, username, password, role) values (102, 'frango@gmail.com', '123456', 'CLIENT');
+insert into app_user (id, username, password, role) values (100, 'ana@email.com', '123456', 'ROLE_ADMIN');
+insert into app_user (id, username, password, role) values (101, 'bia@email.com', '123456', 'ROLE_CLIENT');
+insert into app_user (id, username, password, role) values (102, 'bob@email.com', '123456', 'ROLE_CLIENT');

@@ -33,10 +33,10 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping(value = "/api/users")
 public class UserController {
-	
+
 	@Autowired
 	UserService userService;
-	
+
 
 	@Operation(summary = "Localização de todos os usuários", description = "Recurso usado para localizar todos os usuários",
 			responses = {
@@ -48,7 +48,7 @@ public class UserController {
 		List<User> users = userService.findUsers();
 		return ResponseEntity.ok(UserMapper.toListDto(users));
 	}
-	
+
 	@Operation(summary = "Localização de um usuário", description = "Recurso usado para localizar um usuários por id",
 			responses = {
 					@ApiResponse(responseCode = "200", description = "Usuário resgatado com sucesso!",
@@ -57,7 +57,7 @@ public class UserController {
 							content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
 			})
 	@GetMapping("/{id}")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN') OR ( hasRole('CLIENT') AND #id == authentication.principal.id)")
 	public ResponseEntity<UserResponseDto> getById(@PathVariable Long id) {
 		User user = userService.findById(id);
 		return ResponseEntity.ok(UserMapper.toDto(user));
@@ -75,12 +75,12 @@ public class UserController {
 		var user = userService.findByUsername(username);
 		return  ResponseEntity.ok(UserMapper.toDto(user));
 	}
-	
+
 	@Operation(summary = "Criação de um novo usuário", description = "Recurso usado para criar um usuário",
 			responses = {
-					@ApiResponse(responseCode = "201", description = "Usuário criado com sucesso!", 
+					@ApiResponse(responseCode = "201", description = "Usuário criado com sucesso!",
 							content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDto.class ))),
-					@ApiResponse(responseCode = "409", description = "E-mail já cadastrado no sistema!", 
+					@ApiResponse(responseCode = "409", description = "E-mail já cadastrado no sistema!",
 							content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
 					@ApiResponse(responseCode = "422", description = "Recurso não processo por dados de entrada inválidos!",
 							content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
@@ -90,7 +90,7 @@ public class UserController {
 		User user = userService.createUser(UserMapper.toUser(userCreateDto));
 		return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.toDto(user));
 	}
-	
+
 	@Operation(summary = "Edição de senha de um usuário", description = "Recurso usado para editar a senha de um usuário",
 			responses = {
 					@ApiResponse(responseCode = "204", description = "Senha alterada com sucesso!",
@@ -102,7 +102,7 @@ public class UserController {
 			})
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> updateUser(@PathVariable Long id, @Valid @RequestBody UserPassDto userPassDto) {
-		 userService.updatePassword(id, userPassDto.getCurrentPass(), userPassDto.getNewPass(), userPassDto.getConfirmPass());
+		userService.updatePassword(id, userPassDto.getCurrentPass(), userPassDto.getNewPass(), userPassDto.getConfirmPass());
 		return ResponseEntity.noContent().build();
 	}
 }

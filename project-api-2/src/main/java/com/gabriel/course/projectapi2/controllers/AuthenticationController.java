@@ -30,21 +30,21 @@ public class AuthenticationController {
 
     @PostMapping
     public ResponseEntity<?> authenticate (@RequestBody @Valid  UserLoginDto dto, HttpServletRequest request) {
-      log.info("Processo de autenticacao pelo login {}", dto.getUsername());
+        log.info("Processo de autenticacao pelo login {}", dto.getUsername());
 
-      try{
-          UsernamePasswordAuthenticationToken authenticationToken =
-                  new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword());
-          authenticationManager.authenticate(authenticationToken);
+        try{
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword());
+            authenticationManager.authenticate(authenticationToken);
 
-          JwtToken token = detailsService.getToken(dto.getUsername());
-          return  ResponseEntity.ok(token);
+            JwtToken token = detailsService.getToken(dto.getUsername());
+            return  ResponseEntity.ok(token);
 
-      }catch (AuthenticationException exception) {
-          log.warn("Erro na autenticação");
-      }
+        }catch (AuthenticationException exception) {
+            log.warn("Erro na autenticação");
+        }
 
-      return  ResponseEntity.badRequest().body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, "Credenciais Invalidas!"));
+        return  ResponseEntity.badRequest().body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, "Credenciais Invalidas!"));
     }
 
 }

@@ -52,7 +52,7 @@ public class JwtUtils {
 
         return new JwtToken((token));
     }
-//Método para retornar o payload
+    //Método para retornar o payload
     private static Claims getClaimsFromToken (String token) {
         try{
             return  Jwts.parser()
@@ -71,12 +71,12 @@ public class JwtUtils {
 
     public static boolean isValidToken (String token) {
         try{
-              Jwts.parser()
+            Jwts.parser()
                     .verifyWith(generatedKey())
                     .build()
                     .parseSignedClaims(refactorToken(token));
 
-              return  true;
+            return  true;
         }catch (JwtException exception) {
             log.error(String.format("Token invalido %s", exception.getMessage()));
         }
