@@ -3,6 +3,7 @@ package com.gabriel.course.projectapi2.exceptions;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -39,7 +40,19 @@ public class ApiExceptionHandler {
 				contentType(MediaType.APPLICATION_JSON).
 				body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, exception.getMessage()));
 	}
-	
+
+	@ExceptionHandler(AccessDeniedException.class)
+	public ResponseEntity<ErrorMessage> accessDeniedException(AccessDeniedException exception,
+			HttpServletRequest request) {
+
+		log.error("Api error!", exception);
+
+		return ResponseEntity.
+				status(HttpStatus.FORBIDDEN).
+				contentType(MediaType.APPLICATION_JSON).
+				body(new ErrorMessage(request, HttpStatus.FORBIDDEN, exception.getMessage()));
+	}
+
 	
 	@ExceptionHandler(EntityNotFoundException.class)
 	public ResponseEntity<ErrorMessage> entityNotFoundException(RuntimeException exception, 
