@@ -2,6 +2,7 @@ package com.gabriel.course.projectapi2.controllers;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,10 +39,13 @@ public class UserController {
 	UserService userService;
 
 
-	@Operation(summary = "Localização de todos os usuários", description = "Recurso usado para localizar todos os usuários",
+	@Operation(summary = "Localização de todos os usuários", description = "Recurso exige um bearer token, acesso restrito a admin.",
+			security = @SecurityRequirement(name = "security"),
 			responses = {
 					@ApiResponse(responseCode = "200", description = "Usuários resgatados com sucesso!",
-							content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDto.class)))
+							content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDto.class))),
+					@ApiResponse(responseCode = "403", description = "Usuário não possui permissão!",
+							content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
 			})
 	@GetMapping
 	@PreAuthorize("hasRole('ADMIN')")
@@ -50,11 +54,14 @@ public class UserController {
 		return ResponseEntity.ok(UserMapper.toListDto(users));
 	}
 
-	@Operation(summary = "Localização de um usuário", description = "Recurso usado para localizar um usuários por id",
+	@Operation(summary = "Localização de um usuário", description = "Recurso exige um bearer token, acesso restrito a admin e client.",
+			security = @SecurityRequirement(name = "security"),
 			responses = {
 					@ApiResponse(responseCode = "200", description = "Usuário resgatado com sucesso!",
 							content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDto.class))),
 					@ApiResponse(responseCode = "404", description = "Usuário não encontrado!",
+							content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+					@ApiResponse(responseCode = "403", description = "Usuário não possui permissão!",
 							content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
 			})
 	@GetMapping("/{id}")
@@ -64,11 +71,14 @@ public class UserController {
 		return ResponseEntity.ok(UserMapper.toDto(user));
 	}
 
-	@Operation(summary = "Localização de um usuário", description = "Recurso usado para localizar um usuários por nome",
+	@Operation(summary = "Localização de um usuário", description = "Recurso exige um bearer token, acesso restrito a admin e client.",
+			security = @SecurityRequirement(name = "security"),
 			responses = {
 					@ApiResponse(responseCode = "200", description = "Usuário resgatado com sucesso!",
 							content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDto.class))),
 					@ApiResponse(responseCode = "404", description = "Usuário não encontrado!",
+							content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+					@ApiResponse(responseCode = "403", description = "Usuário não possui permissão!",
 							content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
 			})
 	@GetMapping("/username/{username}")
@@ -93,13 +103,16 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.toDto(user));
 	}
 
-	@Operation(summary = "Edição de senha de um usuário", description = "Recurso usado para editar a senha de um usuário",
+	@Operation(summary = "Edição de senha de um usuário", description = "Recurso exige um bearer token, acesso restrito a admin e client.",
+			security = @SecurityRequirement(name = "security"),
 			responses = {
 					@ApiResponse(responseCode = "204", description = "Senha alterada com sucesso!",
 							content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class))),
 					@ApiResponse(responseCode = "400", description = "Senha inserida incompátivel!",
 							content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
 					@ApiResponse(responseCode = "404", description = "Usuário não encontrado!",
+							content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+					@ApiResponse(responseCode = "403", description = "Usuário não possui permissão!",
 							content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
 			})
 	@PutMapping("/{id}")
