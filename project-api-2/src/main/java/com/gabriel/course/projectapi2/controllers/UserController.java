@@ -44,6 +44,7 @@ public class UserController {
 							content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDto.class)))
 			})
 	@GetMapping
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<List<UserResponseDto>> getAllUsers() {
 		List<User> users = userService.findUsers();
 		return ResponseEntity.ok(UserMapper.toListDto(users));
@@ -71,6 +72,7 @@ public class UserController {
 							content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
 			})
 	@GetMapping("/username/{username}")
+	@PreAuthorize("hasRole('ADMIN') OR (hasRole('CLIENT') AND #username == authentication.principal.username)")
 	public ResponseEntity<UserResponseDto> getByUsername(@PathVariable String username) {
 		var user = userService.findByUsername(username);
 		return  ResponseEntity.ok(UserMapper.toDto(user));
@@ -101,6 +103,7 @@ public class UserController {
 							content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
 			})
 	@PutMapping("/{id}")
+	@PreAuthorize("hasAnyRole('ADMIN', 'CLIENT') AND (#id == authentication.principal.id)")
 	public ResponseEntity<Void> updateUser(@PathVariable Long id, @Valid @RequestBody UserPassDto userPassDto) {
 		userService.updatePassword(id, userPassDto.getCurrentPass(), userPassDto.getNewPass(), userPassDto.getConfirmPass());
 		return ResponseEntity.noContent().build();
