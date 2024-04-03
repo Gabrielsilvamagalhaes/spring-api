@@ -1,3 +1,3 @@
-insert into app_user (id, username, password, role) values (100, 'ana@email.com', '123456', 'ROLE_ADMIN');
-insert into app_user (id, username, password, role) values (101, 'bia@email.com', '123456', 'ROLE_CLIENT');
-insert into app_user (id, username, password, role) values (102, 'bob@email.com', '123456', 'ROLE_CLIENT');
+insert into app_users (id, username, password, role) values (100, 'ana@email.com', '$2a$12$fMGY4VdRbn5.7rvC4ES3QuwaCWydLjlkdC6ZDdU3G46jeJiWCVnyC', 'ROLE_ADMIN');
+insert into app_users (id, username, password, role) values (101, 'bia@email.com', '$2a$12$fMGY4VdRbn5.7rvC4ES3QuwaCWydLjlkdC6ZDdU3G46jeJiWCVnyC', 'ROLE_CLIENT');
+insert into app_users (id, username, password, role) values (102, 'bob@email.com', '$2a$12$fMGY4VdRbn5.7rvC4ES3QuwaCWydLjlkdC6ZDdU3G46jeJiWCVnyC', 'ROLE_CLIENT');
