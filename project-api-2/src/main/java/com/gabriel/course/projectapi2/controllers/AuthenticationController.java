@@ -1,10 +1,16 @@
 package com.gabriel.course.projectapi2.controllers;
 
 import com.gabriel.course.projectapi2.dto.UserLoginDto;
+import com.gabriel.course.projectapi2.dto.UserResponseDto;
 import com.gabriel.course.projectapi2.exceptions.ErrorMessage;
 import com.gabriel.course.projectapi2.jwt.JwtToken;
 import com.gabriel.course.projectapi2.jwt.JwtUserDetails;
 import com.gabriel.course.projectapi2.jwt.JwtUserDetailsService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +34,14 @@ public class AuthenticationController {
     @Autowired
     JwtUserDetailsService detailsService;
 
+    @Operation(summary = "Autenticão de usuário", description = "Recurso autentica o usuário para utilizar recursos que necessitam de autenticação. Retornando, um beare token.",
+
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Usuário autenticado com sucesso!",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDto.class))),
+                    @ApiResponse(responseCode = "422", description = "Usuário não possui login ou campos de acesso inválido!",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
+            })
     @PostMapping
     public ResponseEntity<?> authenticate (@RequestBody @Valid  UserLoginDto dto, HttpServletRequest request) {
         log.info("Processo de autenticacao pelo login {}", dto.getUsername());
