@@ -187,6 +187,7 @@ public class UserIT {
 
 	@Test
 	public void userGet_WithInvalidGetById_ReturnStatus404() {
+//		Admin buscando usuário por id inexistente
 		ErrorMessage responseBody = testClient.get()
 				.uri("/api/users/1")
 				.headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
@@ -203,6 +204,7 @@ public class UserIT {
 
 	@Test
 	public void userGet_WithInvalidGetById_ReturnStatus403() {
+//		Cliente buscando outro id sem ser o dele(cliente nao tem permissao para isso)
 		ErrorMessage responseBody = testClient.get()
 				.uri("/api/users/100")
 				.headers(JwtAuthentication.getHeaderAuthorization(testClient, "bia@email.com", "123456"))
@@ -219,8 +221,19 @@ public class UserIT {
 
 	@Test
 	public void userPut_WithPassValidation_ReturnUserUpdatedStatus204() {
+//Admin modificando sua senha
 		testClient.put()
 				.uri("/api/users/100")
+				.headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
+				.contentType(MediaType.APPLICATION_JSON)
+				.bodyValue(new UserPassDto("123456", "654321", "654321"))
+				.exchange()
+				.expectStatus().isNoContent();
+
+//Cliente modificando sua senha
+		testClient.put()
+				.uri("/api/users/101")
+				.headers(JwtAuthentication.getHeaderAuthorization(testClient, "bia@email.com", "123456"))
 				.contentType(MediaType.APPLICATION_JSON)
 				.bodyValue(new UserPassDto("123456", "654321", "654321"))
 				.exchange()
@@ -228,9 +241,43 @@ public class UserIT {
 	}
 
 	@Test
-	public void userPut_WithInvalidPass_ReturnStatus400() {
+	public void userPut_WithInvalidAuthentication_ReturnStatus403() {
+//		Cliente tentando alterar senha de outro usuário
 		ErrorMessage responseBody = testClient.put()
 				.uri("/api/users/100")
+				.headers(JwtAuthentication.getHeaderAuthorization(testClient, "bia@email.com", "123456"))
+				.contentType(MediaType.APPLICATION_JSON)
+				.bodyValue(new UserPassDto("123456", "654322", "654321"))
+				.exchange()
+				.expectStatus().isEqualTo(403)
+				.expectBody(ErrorMessage.class)
+				.returnResult().getResponseBody();
+
+		Assertions.assertThat(responseBody).isNotNull();
+		Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);
+
+//		Admin tentando alterar senha de outro usuário
+		responseBody = testClient.put()
+				.uri("/api/users/101")
+				.headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
+				.contentType(MediaType.APPLICATION_JSON)
+				.bodyValue(new UserPassDto("123456", "654322", "654321"))
+				.exchange()
+				.expectStatus().isEqualTo(403)
+				.expectBody(ErrorMessage.class)
+				.returnResult().getResponseBody();
+
+		Assertions.assertThat(responseBody).isNotNull();
+		Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);
+
+	}
+
+	@Test
+	public void userPut_WithInvalidPass_ReturnStatus400() {
+//		Usuario inserindo senha de confirmação errada
+		ErrorMessage responseBody = testClient.put()
+				.uri("/api/users/100")
+				.headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
 				.contentType(MediaType.APPLICATION_JSON)
 				.bodyValue(new UserPassDto("123456", "654322", "654321"))
 				.exchange()
@@ -241,8 +288,10 @@ public class UserIT {
 		Assertions.assertThat(responseBody).isNotNull();
 		Assertions.assertThat(responseBody.getStatus()).isEqualTo(400);
 
+//		Usuario inserindo senha atual errada
 		responseBody = testClient.put()
 				.uri("/api/users/100")
+				.headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
 				.contentType(MediaType.APPLICATION_JSON)
 				.bodyValue(new UserPassDto("123455", "654321", "654321"))
 				.exchange()
@@ -257,25 +306,11 @@ public class UserIT {
 	}
 
 	@Test
-	public void userPut_WithInvalidId_ReturnStatus404() {
-		ErrorMessage responseBody = testClient.put()
-				.uri("/api/users/2")
-				.contentType(MediaType.APPLICATION_JSON)
-				.bodyValue(new UserPassDto("123456", "654321", "654321"))
-				.exchange()
-				.expectStatus().isEqualTo(404)
-				.expectBody(ErrorMessage.class)
-				.returnResult().getResponseBody();
-
-		Assertions.assertThat(responseBody).isNotNull();
-		Assertions.assertThat(responseBody.getStatus()).isEqualTo(404);
-
-	}
-
-	@Test
 	public void usersGet_WithGetAll_ReturnUserStatus200() {
+//		Admin buscando todos os usuários
 		List<UserResponseDto> responseBody = testClient.get()
 				.uri("/api/users")
+				.headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
 				.exchange()
 				.expectStatus().isOk()
 				.expectBodyList(UserResponseDto.class)
@@ -283,6 +318,23 @@ public class UserIT {
 
 		Assertions.assertThat(responseBody).isNotNull();
 		Assertions.assertThat(responseBody.size()).isEqualTo(3);
+
+	}
+
+	@Test
+	public void usersGet_WithInvalidGetAll_ReturnUsersStatus403() {
+//		Cliente tentando buscar todos os usuários
+		ErrorMessage responseBody = testClient.get()
+				.uri("/api/users")
+				.headers(JwtAuthentication.getHeaderAuthorization(testClient, "bia@email.com", "123456"))
+				.exchange()
+				.expectStatus().isEqualTo(403)
+				.expectBody(ErrorMessage.class)
+				.returnResult().getResponseBody();
+
+		Assertions.assertThat(responseBody).isNotNull();
+		Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);
+
 
 	}
 }
