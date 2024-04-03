@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "Autenticação", description = "Recurso para autenticação na api.")
 @RequestMapping("api/auth")
 @RestController
 @Slf4j
@@ -40,6 +42,8 @@ public class AuthenticationController {
                     @ApiResponse(responseCode = "200", description = "Usuário autenticado com sucesso!",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDto.class))),
                     @ApiResponse(responseCode = "422", description = "Usuário não possui login ou campos de acesso inválido!",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+                    @ApiResponse(responseCode = "400", description = "Credenciais Invalidas!",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
             })
     @PostMapping
