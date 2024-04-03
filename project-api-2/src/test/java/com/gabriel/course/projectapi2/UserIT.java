@@ -188,7 +188,8 @@ public class UserIT {
 	@Test
 	public void userGet_WithInvalidGetById_ReturnStatus404() {
 		ErrorMessage responseBody = testClient.get()
-				.uri("/api/users/2")
+				.uri("/api/users/1")
+				.headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
 				.exchange()
 				.expectStatus().isEqualTo(404)
 				.expectBody(ErrorMessage.class)
@@ -196,6 +197,22 @@ public class UserIT {
 
 		Assertions.assertThat(responseBody).isNotNull();
 		Assertions.assertThat(responseBody.getStatus()).isEqualTo(404);
+
+
+	}
+
+	@Test
+	public void userGet_WithInvalidGetById_ReturnStatus403() {
+		ErrorMessage responseBody = testClient.get()
+				.uri("/api/users/100")
+				.headers(JwtAuthentication.getHeaderAuthorization(testClient, "bia@email.com", "123456"))
+				.exchange()
+				.expectStatus().isEqualTo(403)
+				.expectBody(ErrorMessage.class)
+				.returnResult().getResponseBody();
+
+		Assertions.assertThat(responseBody).isNotNull();
+		Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);
 
 
 	}
