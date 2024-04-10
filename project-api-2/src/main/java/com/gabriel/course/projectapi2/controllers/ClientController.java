@@ -9,6 +9,8 @@ import com.gabriel.course.projectapi2.services.ClientService;
 import com.gabriel.course.projectapi2.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,9 +30,10 @@ public class ClientController {
     UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<ClientResponseDto>> getAllClients() {
-        List<Client> clients = clientService.findAllClients();
-        return ResponseEntity.ok(ClientMapper.toListDto(clients));
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Page<Client>> getAllClients(Pageable pageable) {
+        Page<Client> clients = clientService.findAllClients(pageable);
+        return ResponseEntity.ok(clients);
     }
 
     @GetMapping("/{id}")

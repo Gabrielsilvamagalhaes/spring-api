@@ -6,6 +6,8 @@ import com.gabriel.course.projectapi2.model.Client;
 import com.gabriel.course.projectapi2.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,8 +21,8 @@ public class ClientService {
     private ClientRepository clientRepository;
 
     @Transactional(readOnly = true)
-    public List<Client> findAllClients() {
-        return clientRepository.findAll();
+    public Page<Client> findAllClients(Pageable pageable) {
+        return clientRepository.findAll(pageable);
     }
 
     @Transactional(readOnly = true)

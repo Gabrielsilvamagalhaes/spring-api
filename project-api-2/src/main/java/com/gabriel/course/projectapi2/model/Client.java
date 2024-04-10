@@ -1,5 +1,6 @@
 package com.gabriel.course.projectapi2.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
