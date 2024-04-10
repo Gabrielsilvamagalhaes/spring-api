@@ -1,6 +1,6 @@
 package com.gabriel.course.projectapi2.controllers;
 
-import com.gabriel.course.projectapi2.dto.ClientCreatDto;
+import com.gabriel.course.projectapi2.dto.ClientCreateDto;
 import com.gabriel.course.projectapi2.dto.ClientResponseDto;
 import com.gabriel.course.projectapi2.dto.mapper.ClientMapper;
 import com.gabriel.course.projectapi2.jwt.JwtUserDetails;
@@ -35,7 +35,7 @@ public class ClientController {
 
     @PostMapping
     @PreAuthorize("hasRole('CLIENT')")
-    public ResponseEntity<ClientResponseDto> createClient(@RequestBody @Valid ClientCreatDto client,
+    public ResponseEntity<ClientResponseDto> createClient(@RequestBody @Valid ClientCreateDto client,
                                                           @AuthenticationPrincipal JwtUserDetails userDetails) {
         var c = ClientMapper.toClient(client);
         c.setUser(userService.findById(userDetails.getId()));

@@ -1,14 +1,11 @@
 package com.gabriel.course.projectapi2.dto.mapper;
 
-import com.gabriel.course.projectapi2.dto.ClientCreatDto;
+import com.gabriel.course.projectapi2.dto.ClientCreateDto;
 import com.gabriel.course.projectapi2.dto.ClientResponseDto;
-import com.gabriel.course.projectapi2.dto.UserResponseDto;
 import com.gabriel.course.projectapi2.model.Client;
-import com.gabriel.course.projectapi2.model.User;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.PropertyMap;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,7 +13,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ClientMapper {
 
-    public static Client toClient(ClientCreatDto clientCreatDto) {
+    public static Client toClient(ClientCreateDto clientCreatDto) {
         return new ModelMapper().map(clientCreatDto, Client.class);
 
     }

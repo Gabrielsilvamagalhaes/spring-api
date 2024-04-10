@@ -1,9 +1,8 @@
 package com.gabriel.course.projectapi2;
 
-import com.gabriel.course.projectapi2.dto.ClientCreatDto;
+import com.gabriel.course.projectapi2.dto.ClientCreateDto;
 import com.gabriel.course.projectapi2.dto.ClientResponseDto;
-import com.gabriel.course.projectapi2.dto.UserCreateDto;
-import com.gabriel.course.projectapi2.dto.UserResponseDto;
+import com.gabriel.course.projectapi2.exceptions.ErrorMessage;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,7 @@ public class ClientIT {
                 .uri("/api/clients")
                 .contentType(MediaType.APPLICATION_JSON)
                 .headers(JwtAuthentication.getHeaderAuthorization(testClient, "luis@email.com", "123456"))
-                .bodyValue(new ClientCreatDto("04933209545", "Luis Soares"))
+                .bodyValue(new ClientCreateDto("04933209545", "Luis Soares"))
                 .exchange()
                 .expectStatus().isCreated()
                 .expectBody(ClientResponseDto.class)
@@ -39,4 +38,89 @@ public class ClientIT {
         Assertions.assertThat(responseBody.getName()).isEqualTo("Luis Soares");
 
     }
+
+//    Tentando realizar cadastro com cpf ja existente
+    @Test
+    public  void clientCreate_WihtCPFExisting_ReturnStatus409() {
+        ErrorMessage responseBody = testClient.post()
+                .uri("/api/clients")
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "luis@email.com", "123456"))
+                .bodyValue(new ClientCreateDto("05673774583", "Luis Soares"))
+                .exchange()
+                .expectStatus().isEqualTo(409)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(409);
+
+    }
+
+//    Admin tentando realizar cadastro de cliente
+    @Test
+    public  void clientCreate_WihtAdminInvalidation_ReturnStatus403() {
+        ErrorMessage responseBody = testClient.post()
+                .uri("/api/clients")
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
+                .bodyValue(new ClientCreateDto("63441624572", "Ana Soares"))
+                .exchange()
+                .expectStatus().isEqualTo(403)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);
+
+    }
+
+    @Test
+    public  void clientCreate_WihtDataInvalidation_ReturnStatus422() {
+//        teste para verificar 1 digito a menos no cpf
+        ErrorMessage responseBody = testClient.post()
+                .uri("/api/clients")
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "luis@email.com", "123456"))
+                .bodyValue(new ClientCreateDto("6344162457", "Luis Soares"))
+                .exchange()
+                .expectStatus().isEqualTo(422)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+
+//        testes para verificar nome invalido
+        responseBody = testClient.post()
+                .uri("/api/clients")
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "luis@email.com", "123456"))
+                .bodyValue(new ClientCreateDto("6344162457", "Lu"))
+                .exchange()
+                .expectStatus().isEqualTo(422)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+
+        responseBody = testClient.post()
+                .uri("/api/clients")
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "luis@email.com", "123456"))
+                .bodyValue(new ClientCreateDto("6344162457", ""))
+                .exchange()
+                .expectStatus().isEqualTo(422)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+
+
+
+    }
+
+
 }

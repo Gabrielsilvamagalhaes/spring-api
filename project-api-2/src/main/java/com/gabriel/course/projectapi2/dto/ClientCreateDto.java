@@ -1,6 +1,5 @@
 package com.gabriel.course.projectapi2.dto;
 
-import com.gabriel.course.projectapi2.model.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -11,7 +10,7 @@ import org.hibernate.validator.constraints.br.CPF;
 @Getter
 @Setter
 @ToString
-public class ClientCreatDto {
+public class ClientCreateDto {
 
     @NotBlank
     @CPF(message = "CPF inválido!")
