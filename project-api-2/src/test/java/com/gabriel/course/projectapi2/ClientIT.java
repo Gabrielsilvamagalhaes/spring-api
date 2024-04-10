@@ -121,7 +121,7 @@ public class ClientIT {
     }
 
     @Test
-    public void getClientsById_WithCredetialsValid_ReturnStatus200() {
+    public void getClientById_WithCredetialsValid_ReturnStatus200() {
         ClientResponseDto responseBody = testClient.get()
                 .uri("/api/clients/11")
                 .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
@@ -134,6 +134,35 @@ public class ClientIT {
         Assertions.assertThat(responseBody.getId()).isEqualTo(11);
         Assertions.assertThat(responseBody.getName()).isEqualTo("Bianca Lacerda");
         Assertions.assertThat(responseBody.getCpf()).isEqualTo("05673774583");
+    }
+
+    @Test
+    public void getClientById_WithNotExistingId_ReturnStatus404() {
+        ErrorMessage responseBody = testClient.get()
+                .uri("/api/clients/3")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(404);
+
+    }
+
+    @Test
+    public void getClientById_WithNotAuthorization_ReturnStatus403() {
+        ErrorMessage responseBody = testClient.get()
+                .uri("/api/clients/11")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "bob@email.com", "123456"))
+                .exchange()
+                .expectStatus().isForbidden()
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);
     }
 
 
