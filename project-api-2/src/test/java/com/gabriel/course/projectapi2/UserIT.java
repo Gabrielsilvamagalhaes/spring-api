@@ -25,7 +25,7 @@ public class UserIT {
 	@Autowired
 	WebTestClient testClient;
 	
-//	O motivo do teste_O que será testado_O que sera retornado
+//	 Regra para criação de metodos referentes a testes:  motivo do teste_O que será testado_O que sera retornado
 	@Test
 	public void userCreate_WithUsernameAndPassValidation_ReturnUserCreatedStatus201() {
 		UserResponseDto responseBody = testClient.post()
