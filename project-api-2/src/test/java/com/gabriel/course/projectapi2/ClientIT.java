@@ -118,8 +118,22 @@ public class ClientIT {
         Assertions.assertThat(responseBody).isNotNull();
         Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
 
+    }
 
+    @Test
+    public void getClientsById_WithCredetialsValid_ReturnStatus200() {
+        ClientResponseDto responseBody = testClient.get()
+                .uri("/api/clients/11")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(ClientResponseDto.class)
+                .returnResult().getResponseBody();
 
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getId()).isEqualTo(11);
+        Assertions.assertThat(responseBody.getName()).isEqualTo("Bianca Lacerda");
+        Assertions.assertThat(responseBody.getCpf()).isEqualTo("05673774583");
     }
 
 
