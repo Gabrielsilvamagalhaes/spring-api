@@ -10,6 +10,9 @@ import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ClientMapper {
 
@@ -20,5 +23,12 @@ public class ClientMapper {
 
     public static ClientResponseDto toDto(Client client) {
         return new ModelMapper().map(client, ClientResponseDto.class);
+    }
+
+    public static List<ClientResponseDto> toListDto(List<Client> clients) {
+        return clients.stream()
+                .map( u -> toDto(u))
+                .collect(Collectors.toList());
+
     }
 }
