@@ -33,6 +33,13 @@ public class ClientController {
         return ResponseEntity.ok(ClientMapper.toListDto(clients));
     }
 
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ClientResponseDto> getById(@PathVariable Long id) {
+        var client = clientService.findById(id);
+        return ResponseEntity.ok(ClientMapper.toDto(client));
+    }
+
     @PostMapping
     @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<ClientResponseDto> createClient(@RequestBody @Valid ClientCreateDto client,
