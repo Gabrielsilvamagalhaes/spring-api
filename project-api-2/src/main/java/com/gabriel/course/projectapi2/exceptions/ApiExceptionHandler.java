@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestControllerAdvice
 public class ApiExceptionHandler {
 
-	@ExceptionHandler(UsernameUniqueViolationException.class)
+	@ExceptionHandler({UsernameUniqueViolationException.class, CpfUniqueViolationException.class})
 	public ResponseEntity<ErrorMessage> usernameUniqueViolationException(RuntimeException exception, 
 																		HttpServletRequest request) {
 		
@@ -27,7 +27,9 @@ public class ApiExceptionHandler {
 				contentType(MediaType.APPLICATION_JSON).
 				body(new ErrorMessage(request, HttpStatus.CONFLICT, exception.getMessage()));
 	}
-	
+
+
+
 	
 	@ExceptionHandler(PasswordInvalidException.class)
 	public ResponseEntity<ErrorMessage> passwordInvalidException(RuntimeException exception, 
