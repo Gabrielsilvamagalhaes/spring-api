@@ -2,6 +2,7 @@ package com.gabriel.course.projectapi2;
 
 import com.gabriel.course.projectapi2.dto.ClientCreateDto;
 import com.gabriel.course.projectapi2.dto.ClientResponseDto;
+import com.gabriel.course.projectapi2.dto.PageableDto;
 import com.gabriel.course.projectapi2.exceptions.ErrorMessage;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -165,5 +166,39 @@ public class ClientIT {
         Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);
     }
 
+    @Test
+    public void getClients_WithAuthorzation_ReturnStatus200() {
+        PageableDto responseBody = testClient.get()
+                .uri("/api/clients")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(PageableDto.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getTotalElements()).isEqualTo(2);
+        Assertions.assertThat(responseBody.getTotalPages()).isEqualTo(1);
+        Assertions.assertThat(responseBody.getNumberOfElements()).isEqualTo(2);
+
+    }
+
+//    Usuario tentando buscar todos os clientes(não possui permissao)
+    @Test
+    public void getClient_WithNotAuthorization_ReturnStatus403() {
+        ErrorMessage responseBody = testClient.get()
+                .uri("/api/clients")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "bia@email.com", "123456"))
+                .exchange()
+                .expectStatus().isForbidden()
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);
+
+    }
+
 
 }
+
