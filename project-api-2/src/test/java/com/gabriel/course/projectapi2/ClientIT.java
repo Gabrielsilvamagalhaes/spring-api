@@ -199,6 +199,40 @@ public class ClientIT {
 
     }
 
+//    Cliente Resgatando seus dados
+    @Test
+    public void getClientsDetails_WithAuthorzation_ReturnStatus200() {
+        ClientResponseDto responseBody = testClient.get()
+                .uri("/api/clients/details")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "bia@email.com", "123456"))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(ClientResponseDto.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getId()).isEqualTo(11);
+        Assertions.assertThat(responseBody.getCpf()).isEqualTo("05673774583");
+        Assertions.assertThat(responseBody.getName()).isEqualTo("Bianca Lacerda");
+
+    }
+
+//    Admin tentando resgatar seus dados de cliente(OBS:ele nao possui esses dados e nem acesso ao endpoint"
+   @Test
+    public void getClientDetails_WithNotAuthorization_ReturnStatus403() {
+        ErrorMessage responseBody = testClient.get()
+                .uri("/api/clients/details")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
+                .exchange()
+                .expectStatus().isForbidden()
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);
+
+    }
+
 
 }
 

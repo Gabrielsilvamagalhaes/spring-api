@@ -41,4 +41,9 @@ public class ClientService {
             throw new CpfUniqueViolationException(String.format("CPF: '%s' já cadastrado!", client.getCpf()));
         }
     }
+
+    @Transactional(readOnly = true)
+    public Client findByUserId(Long id) {
+        return clientRepository.findByUserId(id);
+    }
 }

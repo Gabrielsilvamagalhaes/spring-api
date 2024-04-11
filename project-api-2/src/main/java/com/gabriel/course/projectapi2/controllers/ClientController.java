@@ -94,11 +94,18 @@ public class ClientController {
         return ResponseEntity.ok(ClientMapper.toDto(client));
     }
 
-//    Metodo para o cliente resgatar seus proprios dados via token
+@Operation(summary = "Endpoint para o cliente resgatar seus proprios dados", description = "Recurso exige um bearer token, acesso restrito ao proprio cliente.",
+        security = @SecurityRequirement(name = "security"),
+        responses = {
+                @ApiResponse(responseCode = "200", description = "Cliente resgatado com sucesso!",
+                        content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDto.class))),
+                @ApiResponse(responseCode = "403", description = "Não possui permissão!",
+                        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
+        })
     @GetMapping("/details")
     @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<ClientResponseDto> getDetails(@AuthenticationPrincipal JwtUserDetails userDetails) {
-        return ResponseEntity.ok(ClientMapper.toDto(clientService.findById(userDetails.getId())));
+        return ResponseEntity.ok(ClientMapper.toDto(clientService.findByUserId(userDetails.getId())));
     }
 
     @Operation(summary = "Criação de um novo cliente", description = "Recurso usado para criar um cliente, é necessário ser um usuário autenticado",
