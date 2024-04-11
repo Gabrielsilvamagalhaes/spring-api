@@ -4,6 +4,7 @@ import com.gabriel.course.projectapi2.exceptions.CpfUniqueViolationException;
 import com.gabriel.course.projectapi2.exceptions.EntityNotFoundException;
 import com.gabriel.course.projectapi2.model.Client;
 import com.gabriel.course.projectapi2.repositories.ClientRepository;
+import com.gabriel.course.projectapi2.repositories.projection.ClientProjection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -21,8 +22,8 @@ public class ClientService {
     private ClientRepository clientRepository;
 
     @Transactional(readOnly = true)
-    public Page<Client> findAllClients(Pageable pageable) {
-        return clientRepository.findAll(pageable);
+    public Page<ClientProjection> findAllClients(Pageable pageable) {
+        return clientRepository.findAllPageable(pageable);
     }
 
     @Transactional(readOnly = true)

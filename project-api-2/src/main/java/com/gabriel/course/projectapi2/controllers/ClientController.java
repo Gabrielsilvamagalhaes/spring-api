@@ -2,9 +2,12 @@ package com.gabriel.course.projectapi2.controllers;
 
 import com.gabriel.course.projectapi2.dto.ClientCreateDto;
 import com.gabriel.course.projectapi2.dto.ClientResponseDto;
+import com.gabriel.course.projectapi2.dto.PageableDto;
 import com.gabriel.course.projectapi2.dto.mapper.ClientMapper;
+import com.gabriel.course.projectapi2.dto.mapper.PageableMapper;
 import com.gabriel.course.projectapi2.jwt.JwtUserDetails;
 import com.gabriel.course.projectapi2.model.Client;
+import com.gabriel.course.projectapi2.repositories.projection.ClientProjection;
 import com.gabriel.course.projectapi2.services.ClientService;
 import com.gabriel.course.projectapi2.services.UserService;
 import jakarta.validation.Valid;
@@ -18,6 +21,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/clients")
@@ -31,9 +35,10 @@ public class ClientController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Page<Client>> getAllClients(Pageable pageable) {
-        Page<Client> clients = clientService.findAllClients(pageable);
-        return ResponseEntity.ok(clients);
+    public ResponseEntity<PageableDto> getAllClients(Pageable pageable) {
+        Page<ClientProjection> clients = clientService.findAllClients(pageable);
+
+        return ResponseEntity.ok(PageableMapper.toDto(clients));
     }
 
     @GetMapping("/{id}")
