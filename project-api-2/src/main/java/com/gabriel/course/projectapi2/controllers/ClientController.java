@@ -94,6 +94,13 @@ public class ClientController {
         return ResponseEntity.ok(ClientMapper.toDto(client));
     }
 
+//    Metodo para o cliente resgatar seus proprios dados via token
+    @GetMapping("/details")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<ClientResponseDto> getDetails(@AuthenticationPrincipal JwtUserDetails userDetails) {
+        return ResponseEntity.ok(ClientMapper.toDto(clientService.findById(userDetails.getId())));
+    }
+
     @Operation(summary = "Criação de um novo cliente", description = "Recurso usado para criar um cliente, é necessário ser um usuário autenticado",
             security = @SecurityRequirement(name = "security"),
             responses = {
