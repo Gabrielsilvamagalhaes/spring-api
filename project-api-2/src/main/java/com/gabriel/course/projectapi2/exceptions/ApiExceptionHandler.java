@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestControllerAdvice
 public class ApiExceptionHandler {
 
-	@ExceptionHandler({UsernameUniqueViolationException.class, CpfUniqueViolationException.class})
+	@ExceptionHandler({UsernameUniqueViolationException.class, CpfUniqueViolationException.class, CodeUniqueViolationException.class})
 	public ResponseEntity<ErrorMessage> usernameUniqueViolationException(RuntimeException exception, 
 																		HttpServletRequest request) {
 		
