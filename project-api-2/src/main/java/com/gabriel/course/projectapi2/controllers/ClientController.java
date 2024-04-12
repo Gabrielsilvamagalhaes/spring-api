@@ -82,7 +82,7 @@ public class ClientController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Cliente resgatado com sucesso!",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDto.class))),
-                    @ApiResponse(responseCode = "404", description = "Cliente  ão encontrado!",
+                    @ApiResponse(responseCode = "404", description = "Cliente  não encontrado!",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
                     @ApiResponse(responseCode = "403", description = "Não possui permissão!",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
