@@ -1,16 +1,14 @@
 package com.gabriel.course.projectapi2.controllers;
 
-import com.gabriel.course.projectapi2.dto.UserLoginDto;
-import com.gabriel.course.projectapi2.dto.UserResponseDto;
+import com.gabriel.course.projectapi2.dto.Users.UserLoginDto;
+import com.gabriel.course.projectapi2.dto.Users.UserResponseDto;
 import com.gabriel.course.projectapi2.exceptions.ErrorMessage;
 import com.gabriel.course.projectapi2.jwt.JwtToken;
-import com.gabriel.course.projectapi2.jwt.JwtUserDetails;
 import com.gabriel.course.projectapi2.jwt.JwtUserDetailsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;

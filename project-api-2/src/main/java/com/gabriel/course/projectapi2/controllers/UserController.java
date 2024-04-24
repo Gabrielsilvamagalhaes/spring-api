@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gabriel.course.projectapi2.dto.UserCreateDto;
-import com.gabriel.course.projectapi2.dto.UserPassDto;
-import com.gabriel.course.projectapi2.dto.UserResponseDto;
+import com.gabriel.course.projectapi2.dto.Users.UserCreateDto;
+import com.gabriel.course.projectapi2.dto.Users.UserPassDto;
+import com.gabriel.course.projectapi2.dto.Users.UserResponseDto;
 import com.gabriel.course.projectapi2.dto.mapper.UserMapper;
 import com.gabriel.course.projectapi2.exceptions.ErrorMessage;
 import com.gabriel.course.projectapi2.model.User;

@@ -1,9 +1,7 @@
 package com.gabriel.course.projectapi2;
 
-import com.gabriel.course.projectapi2.dto.ClientCreateDto;
-import com.gabriel.course.projectapi2.dto.ClientResponseDto;
-import com.gabriel.course.projectapi2.dto.VacancyCreateDto;
-import com.gabriel.course.projectapi2.dto.VacancyResponseDto;
+import com.gabriel.course.projectapi2.dto.PageableDto;
+import com.gabriel.course.projectapi2.dto.Vacancies.VacancyResponseDto;
 import com.gabriel.course.projectapi2.exceptions.ErrorMessage;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -29,7 +27,7 @@ public class VacancyIT {
                 .uri("/api/vacancies")
                 .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(new VacancyCreateDto("A-50", "FREE"))
+                .bodyValue(new PageableDto.VacancyCreateDto("A-50", "FREE"))
                 .exchange()
                 .expectStatus().isCreated();
     }
@@ -41,7 +39,7 @@ public class VacancyIT {
                 .uri("/api/vacancies")
                 .contentType(MediaType.APPLICATION_JSON)
                 .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
-                .bodyValue(new VacancyCreateDto("B-20", "OCUPPIED"))
+                .bodyValue(new PageableDto.VacancyCreateDto("B-20", "OCUPPIED"))
                 .exchange()
                 .expectStatus().isEqualTo(409)
                 .expectBody(ErrorMessage.class)
@@ -59,7 +57,7 @@ public class VacancyIT {
                 .uri("/api/vacancies")
                 .contentType(MediaType.APPLICATION_JSON)
                 .headers(JwtAuthentication.getHeaderAuthorization(testClient, "bia@email.com", "123456"))
-                .bodyValue(new VacancyCreateDto("A-22", "FREE"))
+                .bodyValue(new PageableDto.VacancyCreateDto("A-22", "FREE"))
                 .exchange()
                 .expectStatus().isEqualTo(403)
                 .expectBody(ErrorMessage.class)
@@ -77,7 +75,7 @@ public class VacancyIT {
                 .uri("/api/vacancies")
                 .contentType(MediaType.APPLICATION_JSON)
                 .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
-                .bodyValue(new VacancyCreateDto("B-500", "FREE"))
+                .bodyValue(new PageableDto.VacancyCreateDto("B-500", "FREE"))
                 .exchange()
                 .expectStatus().isEqualTo(422)
                 .expectBody(ErrorMessage.class)
@@ -91,7 +89,7 @@ public class VacancyIT {
                 .uri("/api/clients")
                 .contentType(MediaType.APPLICATION_JSON)
                 .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
-                .bodyValue(new VacancyCreateDto("B-70", "EXISTIS"))
+                .bodyValue(new PageableDto.VacancyCreateDto("B-70", "EXISTIS"))
                 .exchange()
                 .expectStatus().isEqualTo(422)
                 .expectBody(ErrorMessage.class)
@@ -104,7 +102,7 @@ public class VacancyIT {
                 .uri("/api/clients")
                 .contentType(MediaType.APPLICATION_JSON)
                 .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
-                .bodyValue(new VacancyCreateDto("", "FREE"))
+                .bodyValue(new PageableDto.VacancyCreateDto("", "FREE"))
                 .exchange()
                 .expectStatus().isEqualTo(422)
                 .expectBody(ErrorMessage.class)

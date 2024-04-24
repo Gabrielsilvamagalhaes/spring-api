@@ -1,14 +1,13 @@
 package com.gabriel.course.projectapi2.controllers;
 
-import com.gabriel.course.projectapi2.dto.ClientCreateDto;
-import com.gabriel.course.projectapi2.dto.ClientResponseDto;
+import com.gabriel.course.projectapi2.dto.Clients.ClientCreateDto;
+import com.gabriel.course.projectapi2.dto.Clients.ClientResponseDto;
 import com.gabriel.course.projectapi2.dto.PageableDto;
-import com.gabriel.course.projectapi2.dto.UserResponseDto;
+import com.gabriel.course.projectapi2.dto.Users.UserResponseDto;
 import com.gabriel.course.projectapi2.dto.mapper.ClientMapper;
 import com.gabriel.course.projectapi2.dto.mapper.PageableMapper;
 import com.gabriel.course.projectapi2.exceptions.ErrorMessage;
 import com.gabriel.course.projectapi2.jwt.JwtUserDetails;
-import com.gabriel.course.projectapi2.model.Client;
 import com.gabriel.course.projectapi2.repositories.projection.ClientProjection;
 import com.gabriel.course.projectapi2.services.ClientService;
 import com.gabriel.course.projectapi2.services.UserService;
@@ -30,9 +29,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY;
 

@@ -6,8 +6,8 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 
-import com.gabriel.course.projectapi2.dto.UserCreateDto;
-import com.gabriel.course.projectapi2.dto.UserResponseDto;
+import com.gabriel.course.projectapi2.dto.Users.UserCreateDto;
+import com.gabriel.course.projectapi2.dto.Users.UserResponseDto;
 import com.gabriel.course.projectapi2.model.User;
 
 public class UserMapper {

@@ -1,4 +1,4 @@
-package com.gabriel.course.projectapi2.dto;
+package com.gabriel.course.projectapi2.dto.Vacancies;
 
 import lombok.*;
 

@@ -1,7 +1,7 @@
 package com.gabriel.course.projectapi2;
 
-import com.gabriel.course.projectapi2.dto.ClientCreateDto;
-import com.gabriel.course.projectapi2.dto.ClientResponseDto;
+import com.gabriel.course.projectapi2.dto.Clients.ClientCreateDto;
+import com.gabriel.course.projectapi2.dto.Clients.ClientResponseDto;
 import com.gabriel.course.projectapi2.dto.PageableDto;
 import com.gabriel.course.projectapi2.exceptions.ErrorMessage;
 import org.assertj.core.api.Assertions;

@@ -1,8 +1,8 @@
 package com.gabriel.course.projectapi2.controllers;
 
-import com.gabriel.course.projectapi2.dto.UserResponseDto;
-import com.gabriel.course.projectapi2.dto.VacancyCreateDto;
-import com.gabriel.course.projectapi2.dto.VacancyResponseDto;
+import com.gabriel.course.projectapi2.dto.PageableDto;
+import com.gabriel.course.projectapi2.dto.Users.UserResponseDto;
+import com.gabriel.course.projectapi2.dto.Vacancies.VacancyResponseDto;
 import com.gabriel.course.projectapi2.dto.mapper.VacancyMapper;
 import com.gabriel.course.projectapi2.exceptions.ErrorMessage;
 import com.gabriel.course.projectapi2.services.VacancyService;
@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -22,6 +23,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
+@Tag(name = "Vagas", description = "Realiza as operações de leitura e adição  de umna vaga.")
 @RestController
 @RequestMapping(value = "/api/vacancies")
 public class VacancyController {
@@ -62,7 +64,7 @@ public class VacancyController {
             })
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> create(@RequestBody @Valid VacancyCreateDto createDto) {
+    public ResponseEntity<Void> create(@RequestBody @Valid PageableDto.VacancyCreateDto createDto) {
          vacancyService.save(VacancyMapper.toVacancy(createDto));
 
         URI location = ServletUriComponentsBuilder

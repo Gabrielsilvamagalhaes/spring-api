@@ -1,6 +1,6 @@
 package com.gabriel.course.projectapi2;
 
-import com.gabriel.course.projectapi2.dto.UserLoginDto;
+import com.gabriel.course.projectapi2.dto.Users.UserLoginDto;
 import com.gabriel.course.projectapi2.jwt.JwtToken;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.reactive.server.WebTestClient;

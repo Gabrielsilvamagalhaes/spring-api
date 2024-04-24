@@ -1,8 +1,6 @@
 package com.gabriel.course.projectapi2;
 
-import com.gabriel.course.projectapi2.dto.UserCreateDto;
-import com.gabriel.course.projectapi2.dto.UserLoginDto;
-import com.gabriel.course.projectapi2.dto.UserResponseDto;
+import com.gabriel.course.projectapi2.dto.Users.UserLoginDto;
 import com.gabriel.course.projectapi2.exceptions.ErrorMessage;
 import com.gabriel.course.projectapi2.jwt.JwtToken;
 import org.assertj.core.api.Assertions;

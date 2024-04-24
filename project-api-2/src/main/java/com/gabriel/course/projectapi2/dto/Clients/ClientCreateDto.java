@@ -1,4 +1,4 @@
-package com.gabriel.course.projectapi2.dto;
+package com.gabriel.course.projectapi2.dto.Clients;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

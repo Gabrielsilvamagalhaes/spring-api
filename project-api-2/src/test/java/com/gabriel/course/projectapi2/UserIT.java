@@ -1,6 +1,6 @@
 package com.gabriel.course.projectapi2;
 
-import com.gabriel.course.projectapi2.dto.UserPassDto;
+import com.gabriel.course.projectapi2.dto.Users.UserPassDto;
 import com.gabriel.course.projectapi2.exceptions.ErrorMessage;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -12,8 +12,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-import com.gabriel.course.projectapi2.dto.UserCreateDto;
-import com.gabriel.course.projectapi2.dto.UserResponseDto;
+import com.gabriel.course.projectapi2.dto.Users.UserCreateDto;
+import com.gabriel.course.projectapi2.dto.Users.UserResponseDto;
 
 import java.util.List;
 
