@@ -11,6 +11,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -21,7 +22,7 @@ import java.time.LocalDateTime;
 @Setter
 @EqualsAndHashCode(of = "id")
 @EntityListeners(AuditingEntityListener.class)
-public class ClientVacancy {
+public class ClientVacancy implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,8 +44,8 @@ public class ClientVacancy {
     @Column(name = "date_exit")
     private  LocalDateTime exitDate;
 
-    @Column(name = "value", columnDefinition = "decimal(7,2)")
-    private BigDecimal value;
+    @Column(name = "ammount", columnDefinition = "decimal(7,2)")
+    private BigDecimal ammount;
     @Column(name = "discount", columnDefinition = "decimal(7,2)")
     private BigDecimal discount;
 

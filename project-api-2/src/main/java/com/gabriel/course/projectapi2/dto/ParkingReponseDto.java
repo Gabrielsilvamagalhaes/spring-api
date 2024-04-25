@@ -24,9 +24,9 @@ public class ParkingReponseDto {
     private String plate;
     private String clientCpf;
     private String receipt;
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime enterDate;
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime exitDate;
     private String vacancyCode;
     private BigDecimal value;

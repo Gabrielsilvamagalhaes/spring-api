@@ -11,6 +11,7 @@ import org.hibernate.validator.constraints.br.CPF;
 @Getter
 @Setter
 @ToString
+@Builder
 public class ParkingCreateDto {
     @NotBlank
     private String mark;
