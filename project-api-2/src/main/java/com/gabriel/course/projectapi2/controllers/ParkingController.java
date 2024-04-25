@@ -50,7 +50,7 @@ public class ParkingController {
             @ApiResponse(responseCode = "403", description = "Acesso negado!",
                     content = @Content(mediaType = "application/json;charset=UTF-8",
                         schema = @Schema(implementation = ErrorMessage.class))),
-            @ApiResponse(responseCode = "422", description = "Recurso não processo pro falta de dados",
+            @ApiResponse(responseCode = "422", description = "Recurso não processo por falta de dados",
                     content = @Content(mediaType = "application/json;charset=UTF-8",
                         schema = @Schema(implementation = ErrorMessage.class)))
     })

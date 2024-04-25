@@ -2,6 +2,7 @@ package com.gabriel.course.projectapi2;
 
 import com.gabriel.course.projectapi2.dto.ParkingCreateDto;
 import com.gabriel.course.projectapi2.dto.ParkingReponseDto;
+import com.gabriel.course.projectapi2.exceptions.ErrorMessage;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -39,6 +40,96 @@ public class ParkingIT {
 
     @Test
     public void createCheckIn_WithInvalidAuthorization_ReturnStatus403() {
-        
+//        Usuário tentando realizar o checkIn de uma vaga
+        ErrorMessage response = testClient.post()
+                .uri("/api/parkings/check-in")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "bia@email.com", "123456"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new ParkingCreateDto("Ford", "Dark Blue", "Fiesta", "LZA-3030", "91468050524"))
+                .exchange()
+                .expectStatus().isForbidden()
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        assertThat(response).isNotNull();
+        assertThat(response.getStatus()).isEqualTo(403);
+    }
+
+    @Test
+    public void createCheckIn_WithDataInvalidation_ReturnStatus422() {
+//        Inserindo valores inválidos ou nulos
+        ErrorMessage response = testClient.post()
+                .uri("/api/parkings/check-in")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new ParkingCreateDto("Ford", "Dark Blue", "Fiesta", "LZA-303", "91468050524"))
+                .exchange()
+                .expectStatus().isEqualTo(422)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        assertThat(response).isNotNull();
+        assertThat(response.getStatus()).isEqualTo(422);
+
+        response = testClient.post()
+                .uri("/api/parkings/check-in")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new ParkingCreateDto("Ford", "Dark Blue", "Fiesta", "LZ3-303A", "91468050524"))
+                .exchange()
+                .expectStatus().isEqualTo(422)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        assertThat(response).isNotNull();
+        assertThat(response.getStatus()).isEqualTo(422);
+
+        response = testClient.post()
+                .uri("/api/parkings/check-in")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new ParkingCreateDto("Ford", " ", " ", "LZA-3030", "91468050524"))
+                .exchange()
+                .expectStatus().isEqualTo(422)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        assertThat(response).isNotNull();
+        assertThat(response.getStatus()).isEqualTo(422);
+    }
+
+    @Test
+    public void createCheckIn_WithCpfNotExists_ReturnStatus404() {
+//        Tentando realizar um CheckIn com o cpf inexistente na base de dados
+        ErrorMessage response = testClient.post()
+                .uri("/api/parkings/check-in")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new ParkingCreateDto("Ford", "Red", "Fiat", "LZA-3030", "15721016019"))
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        assertThat(response).isNotNull();
+        assertThat(response.getStatus()).isEqualTo(404);
+    }
+
+    @Sql(scripts = "/sql/parkings/parking-insert-vacancys-ocuppieds.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/sql/parkings/parking-delete-vacancys-ocuppieds.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    public void createCheckIn_WithVacancysOcuppieds_ReturnStatus404() {
+        ErrorMessage response = testClient.post()
+                .uri("/api/parkings/check-in")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new ParkingCreateDto("Ford", "Dark Blue", "Fiesta", "LZA-3030", "91468050524"))
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        assertThat(response).isNotNull();
+        assertThat(response.getStatus()).isEqualTo(404);
     }
 }
