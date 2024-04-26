@@ -4,6 +4,7 @@ import com.gabriel.course.projectapi2.dto.ParkingCreateDto;
 import com.gabriel.course.projectapi2.dto.ParkingReponseDto;
 import com.gabriel.course.projectapi2.dto.mapper.ClientVacancyMapper;
 import com.gabriel.course.projectapi2.exceptions.ErrorMessage;
+import com.gabriel.course.projectapi2.services.ClientVacancyService;
 import com.gabriel.course.projectapi2.services.ParkingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
@@ -17,10 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -31,6 +29,9 @@ import java.net.URI;
 public class ParkingController {
     @Autowired
     ParkingService parkingService;
+
+    @Autowired
+    ClientVacancyService clientVacancyService;
 
 
     @Operation(summary = "Operação de check-in", description = "Recurso para dar entrada de um veículo no estacionamento." +
@@ -68,5 +69,12 @@ public class ParkingController {
                 .toUri();
 
         return ResponseEntity.created(location).body(responseDto);
+    }
+
+    @GetMapping("/check-in/{receipt}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT'")
+    public  ResponseEntity<ParkingReponseDto> getByReceipt(@PathVariable String receipt) {
+        var responseDto = ClientVacancyMapper.toDto(clientVacancyService.findByReceipt(receipt));
+        return ResponseEntity.ok(responseDto);
     }
 }
