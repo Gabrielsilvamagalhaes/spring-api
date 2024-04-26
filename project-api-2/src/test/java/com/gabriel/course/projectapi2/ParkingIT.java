@@ -132,4 +132,46 @@ public class ParkingIT {
         assertThat(response).isNotNull();
         assertThat(response.getStatus()).isEqualTo(404);
     }
+
+    @Test
+    public  void getCheckInData_WithReceiptValidation_ReturnStatus200() {
+//        Admin buscando os dados de check-in de um estacionamento realizado por um cliente
+        ParkingReponseDto response = testClient.get()
+                .uri("api/parkings/check-in/20230313-101300")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(ParkingReponseDto.class)
+                .returnResult().getResponseBody();
+
+        assertThat(response).isNotNull();
+        assertThat(response.getReceipt()).isEqualTo("20230313-101300");
+
+//        Cliente buscando os dados do seu check-in de um estacionamento
+        response = testClient.get()
+                .uri("api/parkings/check-in/20230313-101300")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "bia@email.com", "123456"))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(ParkingReponseDto.class)
+                .returnResult().getResponseBody();
+
+        assertThat(response).isNotNull();
+        assertThat(response.getReceipt()).isEqualTo("20230313-101300");
+    }
+
+    @Test
+    public void  getCheckInData_WithReceiptInvalidation_ReturnStatus404() {
+//        Admin buscando os dados de um check-in com o recibo inválido
+        ErrorMessage response = testClient.get()
+                .uri("api/parkings/check-in/20230313-103245")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        assertThat(response).isNotNull();
+        assertThat(response.getStatus()).isEqualTo(404);
+    }
 }

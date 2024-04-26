@@ -71,8 +71,19 @@ public class ParkingController {
         return ResponseEntity.created(location).body(responseDto);
     }
 
+    @Operation(summary = "Operação de busca de check-in", description = "Recurso localiza um check-in através do seu recibo " +
+            "(acesso restrito a admins e clientes)",
+    security = @SecurityRequirement(name = "security"),
+    responses = {
+            @ApiResponse(responseCode = "200", description = "check-in localizado com sucesso!",
+            content = @Content(mediaType = "application/json;charset=UTF-8",
+            schema = @Schema(implementation = ParkingReponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "check-in não encontrado ou check-out ja realizado",
+            content = @Content(mediaType = "application/json;charset=UTF-8",
+            schema = @Schema(implementation = ErrorMessage.class)))
+    })
     @GetMapping("/check-in/{receipt}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT'")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     public  ResponseEntity<ParkingReponseDto> getByReceipt(@PathVariable String receipt) {
         var responseDto = ClientVacancyMapper.toDto(clientVacancyService.findByReceipt(receipt));
         return ResponseEntity.ok(responseDto);
