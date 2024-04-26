@@ -29,6 +29,6 @@ public class ParkingReponseDto {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime exitDate;
     private String vacancyCode;
-    private BigDecimal value;
+    private BigDecimal ammount;
     private BigDecimal discount;
 }

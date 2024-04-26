@@ -89,6 +89,20 @@ public class ParkingController {
         return ResponseEntity.ok(responseDto);
     }
 
+    @Operation(summary = "Operação de check-out", description = "Recurso realiza o check-out de um cliente no estacionamento,  através do seu recibo " +
+            "(acesso restrito a admins)",
+            security = @SecurityRequirement(name = "security"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "check-out realizado com sucesso!",
+                            content = @Content(mediaType = "application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = ParkingReponseDto.class))),
+                    @ApiResponse(responseCode = "404", description = "recibo não encontrado ou veículo ja passado pelo check-out!",
+                            content = @Content(mediaType = "application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = ErrorMessage.class))),
+                    @ApiResponse(responseCode = "403", description = "acesso negado para clientes!",
+                            content = @Content(mediaType = "application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
+            })
     @PutMapping("/check-out/{receipt}")
     @PreAuthorize("hasRole('ADMIN')")
     public  ResponseEntity<ParkingReponseDto> checkOut(@PathVariable String receipt) {
