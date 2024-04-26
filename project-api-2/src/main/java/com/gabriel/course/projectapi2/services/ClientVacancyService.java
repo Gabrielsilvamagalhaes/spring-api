@@ -24,5 +24,10 @@ public class ClientVacancyService {
                 () -> new EntityNotFoundException(String.format("Dados de check-in do recibo: '%s' não encotrado ou  check-out já realizado", receipt))
         );
     }
+
+    @Transactional(readOnly = true)
+    public long getNumberForTimesCompletedParking(String cpf) {
+        return repository.countByClientCpfAndExitDateIsNotNull(cpf);
+    }
 }
 
