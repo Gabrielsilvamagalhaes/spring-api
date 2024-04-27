@@ -269,4 +269,36 @@ public class ParkingIT {
         assertThat(response).isNotNull();
         assertThat(response.getStatus()).isEqualTo(403);
     }
+
+    @Test
+    public void getParkingClientDetails_WithAuthenticationValidation_ReturnStatus200() {
+        PageableDto response = testClient.get()
+                .uri("api/parkings/client-details")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "bia@email.com", "123456"))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(PageableDto.class)
+                .returnResult().getResponseBody();
+
+        assertThat(response).isNotNull();
+        assertThat(response.getTotalElements()).isEqualTo(2);
+        assertThat(response.getTotalPages()).isEqualTo(1);
+        assertThat(response.getNumberOfElements()).isEqualTo(2);
+
+    }
+
+    @Test
+    public void getParkingClientDetails_WithAuthenticationInvalidation_ReturnStatus403() {
+        ErrorMessage response = testClient.get()
+                .uri("api/parkings/details/05673774583")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "bia@email.com", "123456"))
+                .exchange()
+                .expectStatus().isForbidden()
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        assertThat(response).isNotNull();
+        assertThat(response.getStatus()).isEqualTo(403);
+    }
+
 }

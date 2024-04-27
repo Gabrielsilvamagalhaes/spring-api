@@ -6,6 +6,7 @@ import com.gabriel.course.projectapi2.dto.ParkingResponseDto;
 import com.gabriel.course.projectapi2.dto.mapper.ClientVacancyMapper;
 import com.gabriel.course.projectapi2.dto.mapper.PageableMapper;
 import com.gabriel.course.projectapi2.exceptions.ErrorMessage;
+import com.gabriel.course.projectapi2.jwt.JwtUserDetails;
 import com.gabriel.course.projectapi2.repositories.projection.ClientVacancyProjection;
 import com.gabriel.course.projectapi2.services.ClientVacancyService;
 import com.gabriel.course.projectapi2.services.ParkingService;
@@ -25,6 +26,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -137,4 +139,26 @@ public class ParkingController {
         var dto = PageableMapper.toDto(projection);
             return  ResponseEntity.ok(dto);
     }
+
+    @Operation(summary = "Operação de buscar estacionamentos", description = "Recurso realiza a busca de estacionamentos do próprio cliente, através do seu id" +
+            "(acesso restrito a clientes)",
+            security = @SecurityRequirement(name = "security"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "estacionamentos do cliente buscados com sucesso!",
+                            content = @Content(mediaType = "application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = ParkingResponseDto.class))),
+                    @ApiResponse(responseCode = "403", description = "acesso negado para admins!",
+                            content = @Content(mediaType = "application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
+            })
+    @GetMapping("/client-details")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<PageableDto> getParkingsDetails(@PageableDefault(size = 5, sort = "enterDate", direction = Sort.Direction.ASC
+                                                          ) Pageable pageable, @AuthenticationPrincipal JwtUserDetails user) {
+        Page<ClientVacancyProjection> projection = clientVacancyService.getAllForUserId(user.getId(), pageable);
+        var dto = PageableMapper.toDto(projection);
+            return  ResponseEntity.ok(dto);
+    }
+
+
 }
