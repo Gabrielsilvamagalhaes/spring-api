@@ -4,6 +4,7 @@ import com.gabriel.course.projectapi2.dto.ParkingCreateDto;
 import com.gabriel.course.projectapi2.dto.ParkingResponseDto;
 import com.gabriel.course.projectapi2.dto.mapper.ClientVacancyMapper;
 import com.gabriel.course.projectapi2.exceptions.ErrorMessage;
+import com.gabriel.course.projectapi2.model.ClientVacancy;
 import com.gabriel.course.projectapi2.services.ClientVacancyService;
 import com.gabriel.course.projectapi2.services.ParkingService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @Tag(name = "Estacionamentos", description = "Operações de registro de entrada e saída de veículos no estacionamento.")
 @RestController
@@ -108,5 +110,23 @@ public class ParkingController {
     public  ResponseEntity<ParkingResponseDto> checkOut(@PathVariable String receipt) {
         var clientVacancy = parkingService.checkOut(receipt);
         return ResponseEntity.ok(ClientVacancyMapper.toDto(clientVacancy));
+    }
+
+    @Operation(summary = "Operação de buscar estacionamentos", description = "Recurso realiza a busca de estacionamentos de um cliente,  através do seu cpf " +
+            "(acesso restrito a admins)",
+            security = @SecurityRequirement(name = "security"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "check-out realizado com sucesso!",
+                            content = @Content(mediaType = "application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = ParkingResponseDto.class))),
+                    @ApiResponse(responseCode = "403", description = "acesso negado para clientes!",
+                            content = @Content(mediaType = "application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
+            })
+    @GetMapping("/details/{cpf}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<ParkingResponseDto>> getParkingsDetails(@PathVariable String cpf) {
+            List<ParkingResponseDto> parkings = ClientVacancyMapper.toListDto(clientVacancyService.getParkings(cpf));
+            return  ResponseEntity.ok(parkings);
     }
 }

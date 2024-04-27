@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class ClientVacancyService {
 
@@ -28,6 +30,11 @@ public class ClientVacancyService {
     @Transactional(readOnly = true)
     public long getNumberForTimesCompletedParking(String cpf) {
         return repository.countByClientCpfAndExitDateIsNotNull(cpf);
+    }
+
+    @Transactional
+    public List<ClientVacancy> getParkings(String cpf) {
+        return repository.findByClientCpf(cpf);
     }
 }
 
