@@ -1,8 +1,10 @@
 package com.gabriel.course.projectapi2;
 
+import com.gabriel.course.projectapi2.dto.PageableDto;
 import com.gabriel.course.projectapi2.dto.ParkingCreateDto;
 import com.gabriel.course.projectapi2.dto.ParkingResponseDto;
 import com.gabriel.course.projectapi2.exceptions.ErrorMessage;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -239,16 +241,19 @@ public class ParkingIT {
 
     @Test
     public void getParkingDetails_WithCpfValidation_ReturnStatus200() {
-        List<ParkingResponseDto> response = testClient.get()
+        PageableDto response = testClient.get()
                 .uri("api/parkings/details/05673774583")
                 .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
                 .exchange()
                 .expectStatus().isOk()
-                .expectBodyList(ParkingResponseDto.class)
+                .expectBody(PageableDto .class)
                 .returnResult().getResponseBody();
 
         assertThat(response).isNotNull();
-        assertThat(response.size()).isEqualTo(2);
+        assertThat(response.getTotalElements()).isEqualTo(2);
+        assertThat(response.getTotalPages()).isEqualTo(1);
+        assertThat(response.getNumberOfElements()).isEqualTo(2);
+
     }
 
     @Test

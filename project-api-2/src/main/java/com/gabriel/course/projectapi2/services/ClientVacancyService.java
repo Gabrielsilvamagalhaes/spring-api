@@ -3,7 +3,10 @@ package com.gabriel.course.projectapi2.services;
 import com.gabriel.course.projectapi2.exceptions.EntityNotFoundException;
 import com.gabriel.course.projectapi2.model.ClientVacancy;
 import com.gabriel.course.projectapi2.repositories.ClientVacancyRepository;
+import com.gabriel.course.projectapi2.repositories.projection.ClientVacancyProjection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,9 +35,15 @@ public class ClientVacancyService {
         return repository.countByClientCpfAndExitDateIsNotNull(cpf);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<ClientVacancy> getParkings(String cpf) {
         return repository.findByClientCpf(cpf);
+    }
+
+
+    @Transactional(readOnly = true)
+    public Page<ClientVacancyProjection> getAllforClientCpf(String cpf, Pageable pageable) {
+        return repository.findAllByClientCpf(cpf, pageable);
     }
 }
 
