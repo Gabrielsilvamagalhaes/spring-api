@@ -10,6 +10,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -225,6 +227,34 @@ public class ParkingIT {
 //        Cliente tentando realizar um check-out
         ErrorMessage response = testClient.put()
                 .uri("api/parkings/check-out/20230313-101300")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "bia@email.com", "123456"))
+                .exchange()
+                .expectStatus().isForbidden()
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        assertThat(response).isNotNull();
+        assertThat(response.getStatus()).isEqualTo(403);
+    }
+
+    @Test
+    public void getParkingDetails_WithCpfValidation_ReturnStatus200() {
+        List<ParkingResponseDto> response = testClient.get()
+                .uri("api/parkings/details/05673774583")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(ParkingResponseDto.class)
+                .returnResult().getResponseBody();
+
+        assertThat(response).isNotNull();
+        assertThat(response.size()).isEqualTo(2);
+    }
+
+    @Test
+    public void getParkingDetails_WithAuthenticationInvalidation_ReturnStatus403() {
+        ErrorMessage response = testClient.get()
+                .uri("api/parkings/details/05673774583")
                 .headers(JwtAuthentication.getHeaderAuthorization(testClient, "bia@email.com", "123456"))
                 .exchange()
                 .expectStatus().isForbidden()
