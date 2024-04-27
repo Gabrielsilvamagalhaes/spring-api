@@ -1,7 +1,7 @@
 package com.gabriel.course.projectapi2.controllers;
 
 import com.gabriel.course.projectapi2.dto.ParkingCreateDto;
-import com.gabriel.course.projectapi2.dto.ParkingReponseDto;
+import com.gabriel.course.projectapi2.dto.ParkingResponseDto;
 import com.gabriel.course.projectapi2.dto.mapper.ClientVacancyMapper;
 import com.gabriel.course.projectapi2.exceptions.ErrorMessage;
 import com.gabriel.course.projectapi2.services.ClientVacancyService;
@@ -41,7 +41,7 @@ public class ParkingController {
             @ApiResponse(responseCode = "201", description = "Check-in realizado com sucesso!",
                     headers = @Header(name = HttpHeaders.LOCATION, description = "URL de acesso no check-in feito."),
                     content = @Content(mediaType = "application/json;charset=UTF-8",
-                        schema = @Schema(implementation = ParkingReponseDto.class))
+                        schema = @Schema(implementation = ParkingResponseDto.class))
             ),
             @ApiResponse(responseCode = "404", description = "Possíveis causas: <br/>" +
                     "- CPF do cliente não está cadadastrado <br/>" +
@@ -58,7 +58,7 @@ public class ParkingController {
 
     @PostMapping("/check-in")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ParkingReponseDto> checkIn(@RequestBody @Valid ParkingCreateDto parking) {
+    public ResponseEntity<ParkingResponseDto> checkIn(@RequestBody @Valid ParkingCreateDto parking) {
         var clientVacancy = ClientVacancyMapper.toClientVacancy(parking);
         parkingService.checkIn(clientVacancy);
         var responseDto = ClientVacancyMapper.toDto(clientVacancy);
@@ -77,14 +77,14 @@ public class ParkingController {
     responses = {
             @ApiResponse(responseCode = "200", description = "check-in localizado com sucesso!",
             content = @Content(mediaType = "application/json;charset=UTF-8",
-            schema = @Schema(implementation = ParkingReponseDto.class))),
+            schema = @Schema(implementation = ParkingResponseDto.class))),
             @ApiResponse(responseCode = "404", description = "check-in não encontrado ou check-out ja realizado",
             content = @Content(mediaType = "application/json;charset=UTF-8",
             schema = @Schema(implementation = ErrorMessage.class)))
     })
     @GetMapping("/check-in/{receipt}")
     @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
-    public  ResponseEntity<ParkingReponseDto> getByReceipt(@PathVariable String receipt) {
+    public  ResponseEntity<ParkingResponseDto> getByReceipt(@PathVariable String receipt) {
         var responseDto = ClientVacancyMapper.toDto(clientVacancyService.findByReceipt(receipt));
         return ResponseEntity.ok(responseDto);
     }
@@ -95,7 +95,7 @@ public class ParkingController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "check-out realizado com sucesso!",
                             content = @Content(mediaType = "application/json;charset=UTF-8",
-                                    schema = @Schema(implementation = ParkingReponseDto.class))),
+                                    schema = @Schema(implementation = ParkingResponseDto.class))),
                     @ApiResponse(responseCode = "404", description = "recibo não encontrado ou veículo ja passado pelo check-out!",
                             content = @Content(mediaType = "application/json;charset=UTF-8",
                                     schema = @Schema(implementation = ErrorMessage.class))),
@@ -105,7 +105,7 @@ public class ParkingController {
             })
     @PutMapping("/check-out/{receipt}")
     @PreAuthorize("hasRole('ADMIN')")
-    public  ResponseEntity<ParkingReponseDto> checkOut(@PathVariable String receipt) {
+    public  ResponseEntity<ParkingResponseDto> checkOut(@PathVariable String receipt) {
         var clientVacancy = parkingService.checkOut(receipt);
         return ResponseEntity.ok(ClientVacancyMapper.toDto(clientVacancy));
     }

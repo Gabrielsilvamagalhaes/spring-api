@@ -1,7 +1,7 @@
 package com.gabriel.course.projectapi2.dto.mapper;
 
 import com.gabriel.course.projectapi2.dto.ParkingCreateDto;
-import com.gabriel.course.projectapi2.dto.ParkingReponseDto;
+import com.gabriel.course.projectapi2.dto.ParkingResponseDto;
 import com.gabriel.course.projectapi2.model.ClientVacancy;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -14,7 +14,7 @@ public class ClientVacancyMapper {
         return  new ModelMapper().map(parking, ClientVacancy.class);
     }
 
-    public static ParkingReponseDto toDto(ClientVacancy clientVacancy) {
-        return  new ModelMapper().map(clientVacancy, ParkingReponseDto.class);
+    public static ParkingResponseDto toDto(ClientVacancy clientVacancy) {
+        return  new ModelMapper().map(clientVacancy, ParkingResponseDto.class);
     }
 }

@@ -2,11 +2,7 @@ package com.gabriel.course.projectapi2.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.hibernate.validator.constraints.br.CPF;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -17,7 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ParkingReponseDto {
+public class ParkingResponseDto {
     private String mark;
     private String color;
     private String model;
