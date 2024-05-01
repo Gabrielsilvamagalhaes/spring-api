@@ -1,5 +1,7 @@
 package com.gabriel.course.projectapi2.exceptions;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +15,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+//Anotação lombok que faz a mesma função do @Autowired(injeta classes sem precisar inicializa-las)
+@RequiredArgsConstructor
 @RestControllerAdvice
 public class ApiExceptionHandler {
+
+	private final MessageSource messageSource;
 
 	@ExceptionHandler({UsernameUniqueViolationException.class, CpfUniqueViolationException.class, CodeUniqueViolationException.class})
 	public ResponseEntity<ErrorMessage> usernameUniqueViolationException(RuntimeException exception, 
@@ -78,6 +84,8 @@ public class ApiExceptionHandler {
 		return ResponseEntity.
 				status(HttpStatus.UNPROCESSABLE_ENTITY).
 				contentType(MediaType.APPLICATION_JSON).
-				body(new ErrorMessage(request, HttpStatus.UNPROCESSABLE_ENTITY, "Campo(s) inválidos!", result));
+				body(new ErrorMessage(request, HttpStatus.UNPROCESSABLE_ENTITY,
+						messageSource.getMessage("message.invalid.field", null, request.getLocale()),
+						result, messageSource));
 	}
 }

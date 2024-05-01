@@ -33,11 +33,11 @@ public class PageableDto {
     @ToString
     public static class VacancyCreateDto {
 
-        @NotBlank
-        @Size(min = 4, max = 4)
+        @NotBlank(message = "{NotBlank.vacancyCreateDto.code}")
+        @Size(min = 4, max = 4, message = "{Size.vacancyCreateDto.code}")
         private String code;
-        @NotBlank
-        @Pattern(regexp = "OCUPPIED|FREE")
+        @NotBlank(message = "{NotBlank.vacancyCreateDto.status}")
+        @Pattern(regexp = "OCUPPIED|FREE", message = "{Pattern.vacancyCreateDto.status}")
         private String status;
     }
 }
